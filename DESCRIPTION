@@ -1,0 +1,20 @@
+Package: BubbleTree
+Type: Package
+Title: A method to elucidate purity and clonality in tumors using copy
+        number ratio and allele frequency
+Version: 0.99.2
+Date: 2014-12-04
+Author: Wei Zhu <zhuw@medimmune.com> Michael Kuziora
+        <kuzioram@medimmune.com> Brandon Higgs <higgsb@medimmune.com>
+Maintainer: Wei Zhu <zhuw@medimmune.com>
+Description: BubbleTree utilizes homogenous pertinent somatic copy
+        number alterations (SCNAs) as markers of tumor clones to
+        extract estimates of tumor ploidy, purity and clonality.
+Depends: R (>= 3.0)
+Imports: GenomicRanges, IRanges, plyr, geosphere, mixdist, dplyr, shape
+biocViews: CopyNumberVariation
+License: GPL (>=3.1)
+Suggests: BiocStyle, knitr, rmarkdown
+VignetteBuilder: knitr
+Encoding: UTF-8
+NeedsCompilation: no

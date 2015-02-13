@@ -1,0 +1,46 @@
+#' BubbleTree: a method to elucidate purity and clonality in tumors using copy number ratio and
+#' allele frequency.
+#'
+#' @description BubbleTree utilizes homogenous pertinent somatic copy number alterations (SCNAs) as
+#' markers of tumor clones to extract tumor ploidy, purity and clonality estimates.
+#'
+#'
+#' A list of provided functions:
+#' \itemize{
+#'  \item \code{\link{drawBranches}} the function to draw branches of BubbleTree
+#'  \item \code{\link{plotBubbles}} the function to draw BubbleTree
+#'  \item \code{\link{calc.prev}} the function to calculate the prevalence of the tumor clones
+#' }
+#'
+#' @aliases BubbleTree
+#'
+#' @examples
+#' data(hetero.gr) #loads sequence variants
+#' data(cnv.gr) #loads copy number variation data
+#' rbd<-getRBD(hetero.gr, cnv.gr) 
+#' plotBubbles(rbd) #plot BubbleTree
+#' pur <- calc.prev(rbdx=rbd,heurx=FALSE,modex=3,plotx="prev_model.pdf")
+#'
+#'# extract the genotype (branch) and frequency for each segment
+#'  pur[[1]]$ploidy_prev
+# # tumor purity
+#'  pur[[2]][nrow(pur[[2]]),2]
+#'
+#' @author Wei Zhu \email{ZhuW@@MedImmune.com}
+#' @author Michael Kuziora \email{KuzioraM@@MedImmune.com}
+#' @author Brandon Higgs \email{HiggsB@@MedImmune.com}
+#' 
+#' @references 
+#' \bold{BubbleTree: an intuitive visualization to elucidate tumoral 
+#' aneuploidy and clonality in somatic mosaicism using copy number 
+#' ratio and allele frequency.}  Wei Zhu, Michael Kuziora, 
+#' Christopher Morehouse, Tianwei Zhang, Yinong Sebastian, 
+#' Zheng Liu, Dong Shen, Jiaqi Huang, Zhengwei Dong, Yi Gu, 
+#' Feng Xue, Liyan Jiang, Yihong Yao, Brandon W. Higgs.  
+#' \emph{Genome Biology}, Submitted (2015)
+
+#'
+#' @docType package
+#' @name bubbletree
+#'
+NULL

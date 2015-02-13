@@ -1,0 +1,218 @@
+<!--
+%%\VignetteIndexEntry{BubbleTree Package}
+%%\VignetteEngine{knitr::rmarkdown}
+-->
+
+---
+title: "BubbleTree Package Vignette"
+author: "Wei Zhu, Michael Kuziora, Brandon Higgs"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc: true
+---
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+## Introduction
+
+To evaluate the aneuploidy and prevalence of clonal or quasiclonal tumors, we developed a novel tool to characterize the mosaic tumor genome on the basis of one major assumption: the genome of a heterogeneous multi-cell tumor biopsy can be sliced into a chain of segments that are characterized by homogeneous somatic copy number alternations (SCNAs) and B allele frequencies (BAFs). The model, termed BubbleTree, utilizes both SCNAs and the interconnected BAFs as markers of tumor clones to extract tumor clonality estimates. BubbleTree is an intuitive and powerful approach to jointly identify ASCN, tumor purity and (sub)clonality, which aims to improve upon current methods to characterize the tumor karyotypes and ultimately better inform cancer diagnosis, prognosis and treatment decisions.
+
+## Quickstart to Using BubbleTree
+To perform a BubbleTree analysis, data pertaining to the position and B allele frequency of heterozygous snps in the tumor sample and segmented copy number information including the position, number of markers/segment and log2 copy number ratio between tumor and normal samples must first be obtained.  The section "Preparing Data for BubbleTree" below demonstrates just one way of generating the proper input files from next generation sequencing (NGS) workflows.  Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as follows.
+
+```{r}
+library(BubbleTree)
+data(hetero.gr) #loads sequence variants
+data(cnv.gr) #loads copy number variation data
+```
+
+The sequence variation and copy number data is then combined into a data frame object while simutaneously adding cytoband annotation. This function also calculates  Heterozygosity-Deviation Scores (HDS) for each variant and summarizes mean HDS and HDS Standard Deviation/ CNV segment.
+
+```{r}
+rbd=getRBD(hetero.gr,cnv.gr)
+```
+Finally a BubbleTree diagram is created using the rbd data frame.
+
+```{r}
+plotBubbles(rbd)
+```
+
+## Preparing Data for BubbleTree
+
+BubbleTree was developed using both whole exome sequencing (WES) and whole genome sequening (WGS) NGS data from paired tumor/normal biopsies, but this model should also be applicable to array comparative genomic hybridization (aCGH) and single nucleotide polymorphism (SNP) array data. 
+
+There many methods for generating and processing sequencing data in preparation for BubbleTree analysis. In the following section we provide example workflows starting from WES NGS which can be adapted as needed to alternate inputs.
+
+### Preparing Sequence Variation Data
+
+The primary BubbleTree requirement for sequence variant information is a `r Biocpkg("GRanges")` object containing the B alelle frequencies and genomic positions of variants known to be heterozygous in the paired normal sample.    
+
+Mapped reads from tumor and normal tissue can be processed with mutation caller software such as VARSCAN or MUTECT.  In this example, we use a hypothetical vcf file output which contains mutation calls from both normal and tumor samples.  
+
+The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
+
+```{r, eval=FALSE}
+library(VariantAnnotation)
+vc=readVcf("MyN_TSamples.vcf",genome="hg19")
+fq=geno(vc)$FREQ
+freq <- data.frame(fq)
+freq[,] <- as.numeric(gsub("%", "", as.matrix(freq[,])))/100
+colnames(freq)=paste(colnames(freq),"freq",sep=".")
+```
+
+As a QC criteria, we use only variants that meet a certain read depth.  Depth information can also be extracted from the vcf file and combined with B-allele frequency data and snp position data as follows.
+
+```{r, eval=FALSE}
+dp=geno(vc)$DP
+colnames(dp)=paste(colnames(dp),"dp",sep=".")
+#combine all with chr and position info
+snp.dat=data.frame("CHROM"=as.vector(seqnames(vc)),
+                   "POS"=start(vc),freq,dp)
+
+```
+
+We use a small function to select heterozygous mutations defined as having a B allele frequency between 0.4 and 0.6, and use the function to screen heterozygous calls in the normal sample with a read depth >=15.
+
+```{r, eval=FALSE}
+is.hetero <- function(x, a=0.4, b=0.6) {
+  (x - a)  *  (b - x) >= 0
+} 
+
+snp.ss=subset(snp.dat, ! CHROM %in% c("chrX", "chrY") & normal.dp >= 15 &  is.hetero(normal.freq, 0.4, 0.6))
+```
+
+Finally, a `r Biocpkg("GRanges")` object containing the tumor B-allele frequency of mutations shown to be heterozygous in normal is created.  BubbleTree functions expect tumor allele frequencies to be in a Metadata column labeled "freq".
+
+```{r, eval=FALSE}
+library(GRanges)
+snp.gr <- GRanges(snp.ss$CHROM, IRanges(snp.ss$POS, snp.ss$POS), mcols=snp.ss[,"tumor.freq"])
+names(elementMetadata(snp.gr))[grep(".freq",names(elementMetadata(snp.gr)))]<-"freq"
+```
+
+### Preparing Copy Number Variation Data
+
+BubbleTree requires segmented copy number information for sample analysis.  Specifically, the genomic position, the number of markers and the mean log2 tumor/normal copy number ratio for each segment.  
+
+Alternative ways to generate this data exist, but for our WES NGS example we use the ExomeCNV.R package workflow as documented at this link; https://secure.genome.ucla.edu/index.php/ExomeCNV_User_Guide
+
+The file demo.eCNV created in the above referenced workflow contains log2 ratios for each exon (prior to segmentation).  We smooth and perform segmentation using the Bioconductor package `r Biocpkg("DNAcopy")`.  
+
+```{r, eval=FALSE}
+library(DNAcopy)
+#create a CNA object
+CNA.object <- CNA(demo.eCNV$logR, demo.eCNV$chr,
+                  demo.eCNV$probe_end, data.type = "logratio", sampleid = "test")
+#smooth
+smoothed.CNA.object <- smooth.CNA(CNA.object)
+#segment
+seg=segment(smoothed.CNA.object)
+```
+
+Next, a GRanges object is created containing the required information with a restriction that each segment contain at least 10 markers.  The Metadata columns containing the number of markers/segment and the mean log2 ratio/segment must be named "num.mark" and "seg.mean" respectively.
+
+```{r, eval=FALSE}
+library(GenomicRanges)
+min.num <- 10
+cnv.gr <- with(subset(seg$output, num.mark >= min.num & ! chrom %in% c("chrX", "chrY")) , GRanges(chrom, IRanges(loc.start, loc.end), mcols=cbind(num.mark, seg.mean)))
+
+```
+
+## Main Bubbletree Functions
+
+### BubbleTree model and diagram
+
+BubbleTree is a model based on three valid assumptions: 1) the paired normal specimen expresses the common diploid state, 2) variant sites are bi-allelic, and 3) genome segments (rather than the whole genome) with homogeneous copy number ratio and BAFs, exist in the profiled tumor genome. The first two assumptions generally hold, whereas the last homogeneity assumption can also be satisfied even in the case of a complex tumor clonal structure.  
+
+As the three assumptions are all generally plausible, we therefore developed a model for the BubbleTree diagram. For one homogenous genomic segment (x:y;p), we have,
+
+   Expected copy number,  (CN)=2×(1-p)+(x+y)×p
+
+   Copy Ratio,            R=(CN)/2=(1-p)+(x+y)/2×p     (1)
+
+   B allele frequency,    BAF=(y×p+1×(1-p))/((x+y)×p+2×(1-p))
+
+and the homozygous-deviation score (HDS),
+
+  HDS= ∣BAF-0.5∣=(p×∣y-x∣)/(2×[(x+y)×p+2×(1-p)])    (2)
+
+Based on equations (1) and (2), we are able to calculate an R score (copy ratio) and HDS for a segment (x:y; p).  For example, (0:1; 0.75) will provide 0.625 and 0.3 for the R scores and HDS, respectively. 
+
+These calculations are performed by the getRBD() function
+
+```{r}
+library(BubbleTree)
+data(hetero.gr) 
+data(cnv.gr)
+rbd=getRBD(snp.gr=hetero.gr,cnv.gr=cnv.gr)
+head(rbd)
+```
+
+A plot of R score and HDS at various ploidy states forms the branches of a BubbleTree plot which can be generated as follows.  Normally, this function is called internally by the plotBubbles() function.
+
+```{r}
+drawBranches()
+```
+The above figure introduces the relationship between HDS and  R score (copy number ratio), both used to elucidate the tumor cell prevalence, ploidy state, and clonality for a tumor sample. Generally, the R score indicates the copy number change, ranging from 0 (homozygous deletion) to 3 (hexaploidy) or higher, while the HDS represents LOH, ranging from values of 0 to 0.5 (i.e., LOH with 100% prevalence). Each branch in the diagram starts at the root (1,0), a value of HDS=0 and R score=1. Namely, a diploid heterozygous genotype segment has a copy number ratio, or R score of 1 (tumor DNA copies=2; normal DNA copies=2, so 2/2=1) with no LOH (HDS=0) and is indicated with a genotype of AB, where the A allele is from one parent and the B allele is from the other parent presumably. Then from the root (1,0), the segment prevalence values are provided in increasing increments of 10%, with each branch representing a different ploidy state.  As the values increase along the y-axis, the occurrence of LOH increases, such that on the AA/BB branch at HDS=0.5 and  R score=1, this indicates a disomy state with LOH and 100% prevalence for the segment. 
+
+Generally, the branches mark the projected positions of segments at the given integer copy number ploidy states and prevalence.  The plot clearly highlights how high prevalence values create distinct separation between branches (i.e., ploidy states), while as prevalence approaches zero, the branches are non-distinguishable. The ploidy states of Φ, AABB, and AAABBB all have HDS scores of 0, which indicate no LOH at increasing or decreasing R scores from a value of 1, and therefore differ most from the copy number neutral heterozygous disomy state (AB) by R score only. These three ploidy states indicate homozygous deletion (Φ) or amplifications (AABB=1 DNA copy number gain each allele, AAABBB=2 DNA copy number gains each allele). Other ploidy states such as ABB (brown), ABBB (blue), ABBBB (green), or ABBBBB (purple) share a piece of the same branch (i.e., the indistinguishable branches), suggesting the existence of multiple likely combinations of prevalence and ploidy states for that region.  A tumor clone usually has more than one SCNA, so the abundance of the clone can still be inferred from other distinguishable branches.
+
+### Adding Leaves to the Tree
+
+Along with the branches from the prediction of the model, bubbles (i.e., the leaves) are depicted on the basis of the real data, where the size of the bubbles are proportional to the length of the homogenous segments.  
+
+Using example data loaded above, we can regenerate the plot including leaves for this tumor sample 
+
+```{r}
+plotBubbles(rbd)
+```
+A bubble (i.e., the homogenous SCNA segment) represents the HDS and R score as measured from the assay, such as WES or WGS data. The location of the bubble determines the allele copy number(s) and prevalence for the SCNA segment. A close proximity between a bubble and branch indicates an integer copy-number (e.g. 15q11.2-14), whereas any deviation between the bubble and branch (e.g, 7q21.11-21.12) is due to either variation in the measurement or a non-integer copy-number – something that occurs with multiple clones harboring different SCNAs over the same region.  
+
+### Tumor Purity
+
+The purity, or prevalence of tumor cells within the tumor, can be determined from the SCNA segments at the highest HDS values, assuming the tumor cells all harbor some proportion of SCNAs or LOH.  
+
+The calc.prev() function can be used to extract tuor prevalence information from the plot.
+
+```{r}
+pur <- calc.prev(rbdx=rbd,heurx=FALSE,modex=3,plotx="prev_model.pdf")
+# extract the genotype (branch) and frequency for each segment
+ head(pur[[1]]$ploidy_prev)
+# tumor purity
+ pur[[2]][nrow(pur[[2]]),2]
+```
+
+
+## BubbleTree Accessory Functions
+
+
+### drawBubble
+```{r drawBubble_example}
+drawBranches(main="Demo")
+drawBubble(0.5, 0.3, 5000, "blue", info="PTEN", size=2, adj=-0.5)
+```
+
+### compareBubbles
+```{r compareBubbles_example}
+data(hcc.rbd.lst)
+```
+
+Show the SCNV changes between the recurrent tumor and the primary tumor.
+
+```{r}
+with(hcc.rbd.lst, compareBubbles(HCC11.Primary.Tumor, HCC11.Recurrent.Tumor, min.dist=0.05, min.mark=2000))
+```
+
+Show the similarity in the recurrent tumors between two subjects.
+
+```{r}
+with(hcc.rbd.lst, compareBubbles(HCC4.Recurrent.Tumor, HCC11.Recurrent.Tumor, min.dist=0.0, max.dist=0.1, min.mark=500))
+```
+
+## Citation
+
+**BubbleTree: an intuitive visualization to elucidate tumoral aneuploidy and clonality in somatic mosaicism using copy number ratio and allele frequency.**  Wei Zhu, Michael Kuziora, Christopher Morehouse, Tianwei Zhang, Yinong Sebastian, Zheng Liu, Dong Shen, Jiaqi Huang, Zhengwei Dong, Yi Gu, Feng Xue, Liyan Jiang, Yihong Yao, Brandon W. Higgs.  _Genome Biology_ Submitted (2015)
+
+============================================================================
