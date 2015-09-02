@@ -1,13 +1,15 @@
 Package: BubbleTree
 Type: Package
 Title: CNV analysis in groups of tumor samples
-Version: 1.99.0
+Version: 1.99.1
 Date: 2015-08-27
-Author: Wei Zhu <zhuw@medimmune.com>, Michael Kuziora <kuzioram@medimmune.com>, Todd Creasy <creasyt@medimmune.com>, Brandon Higgs <higgsb@medimmune.com>
+Author: Wei Zhu <zhuw@medimmune.com>, Michael Kuziora <kuzioram@medimmune.com>, 
+Todd Creasy <creasyt@medimmune.com>, Brandon Higgs <higgsb@medimmune.com>
 Maintainer: Wei Zhu <zhuw@medimmune.com>
 Description: CNV analysis in groups of tumor samples (Publication Pending).
 License: LGPL (>= 3)
-Imports: BiocGenerics (>= 0.7.5), Biobase, ggplot2, WriteXLS, gtools, RColorBrewer, limma, scales, rgl, grid, gtable, gridExtra, biovizBase, rainbow
+Imports: BiocGenerics (>= 0.7.5), Biobase, ggplot2, WriteXLS, gtools, RColorBrewer, 
+limma, scales, rgl, grid, gtable, gridExtra, biovizBase, rainbow
 Depends: R (>= 3.2.1), IRanges, GenomicRanges, plyr, dplyr, magrittr
 Suggests: methods, knitr, rmarkdown
 biocViews: CopyNumberVariation, Software, Sequencing, Coverage

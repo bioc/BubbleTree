@@ -13,13 +13,61 @@ vignette: >
     \usepackage[utf8]{inputenc}
 ---
 
-## Abstract
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+## Introduction
 
 To evaluate the aneuploidy and prevalence of clonal or quasiclonal tumors, we developed a novel tool to characterize the mosaic tumor genome on the basis of one major assumption: the genome of a heterogeneous multi-cell tumor biopsy can be sliced into a chain of segments that are characterized by homogeneous somatic copy number alternations (SCNAs) and B allele frequencies (BAFs). The model, termed BubbleTree, utilizes both SCNAs and the interconnected BAFs as markers of tumor clones to extract tumor clonality estimates. BubbleTree is an intuitive and powerful approach to jointly identify ASCN, tumor purity and (sub)clonality, which aims to improve upon current methods to characterize the tumor karyotypes and ultimately better inform cancer diagnosis, prognosis and treatment decisions.
 
 ## Quickstart to Using BubbleTree
 
-To perform a BubbleTree analysis, data pertaining to the position and B allele frequency of heterozygous snps in the tumor sample and segmented copy number information including the position, number of markers/segment and log2 copy number ratio between tumor and normal samples must first be obtained. Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as follows.
+To perform a BubbleTree analysis, data pertaining to the position and B allele frequency of heterozygous snps in the tumor sample and segmented copy number information including the position, number of markers/segment and log2 copy number ratio between tumor and normal samples must first be obtained. 
+
+## Preparing Data for BubbleTree
+
+BubbleTree was developed using both whole exome sequencing (WES) and whole genome sequening (WGS) NGS data from paired tumor/normal biopsies, but this model should also be applicable to array comparative genomic hybridization (aCGH) and single nucleotide polymorphism (SNP) array data.
+
+There are many methods for generating and processing sequencing data in preparation for BubbleTree analysis. In the following section we provide example workflows starting from WES NGS which can be adapted as needed to alternate inputs.
+
+### Preparing Sequence Variation Data
+
+The primary BubbleTree requirement for sequence variant information is a `r Biocpkg("GRanges")` object containing the B alelle frequencies and genomic positions of variants known to be heterozygous in the paired normal sample.
+
+Mapped reads from tumor and normal tissue can be processed with mutation caller software such as VARSCAN or MUTECT. In this example, we use a hypothetical vcf file output which contains mutation calls from both normal and tumor samples.
+
+The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
+
+Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as follows.
+
+```{r}
+library(BubbleTree)
+```
+
+allCall.lst is pre-calculated CNV data from...
+allRBD.lst is pre-calculated CNV data but ...
+
+```{r}
+load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
+load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))
+```
+
+The remaining datasets used to support the CNV data display on the BubbleTree plots.
+
+```{r}
+load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree")) # list of 379 known cancer genes
+load(system.file("data", "vol.genes.rda", package="BubbleTree")) # another list of 105 known cancer genes
+load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
+load(system.file("data", "cyto.gr.rda", package="BubbleTree")) # load cytoband coordinate data
+load(system.file("data", "centromere.dat.rda", package="BubbleTree")) # load centromere coordinate data
+load(system.file("data", "all.somatic.lst.RData", package="BubbleTree")) # load SNV location data
+load(system.file("data", "allHetero.lst.RData", package="BubbleTree")) # load sequence variants
+load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) # load copy number variation data
+load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) # load hg19 sequence data
+```
+
+This will create BubbleTree plots for all 41 samples using adjusted and non-adjusted CNV data.
 
 ```{r}
 library(BubbleTree)
@@ -40,6 +88,16 @@ l_ply(names(allCall.lst), function(nn){
 })
 dev.off()
 
+```
+
+This will create BubbleTree plots for all 41 samples using only non-adjusted CNV data.
+
+```{r}
+library(BubbleTree)
+load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
+
+btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
+
 pdf.filename <- paste("adjplot_single", "pdf", sep=".")
 pdf(pdf.filename, width=8, height=6)
 
@@ -47,7 +105,7 @@ l_ply(names(allCall.lst), function(nn){
     cat("Processing sample name: ", nn, "\n")
     rbd1 <- allCall.lst[[nn]]@rbd
     rbd2 <- allCall.lst[[nn]]@rbd.adj
-    arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize = 0.1, min.trtSize= 0.1)
+    arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.1, min.trtSize=0.1)
     btree <- drawBTree(btreeplotter, rbd1)  + arrows
     print(btree)
 })
@@ -55,7 +113,7 @@ dev.off()
 
 ```
 
-To generate a Excel report of a BubbleTree analysis.
+To generate a Excel report of a BubbleTree analysis. This report only shows samples that have tumors with high ploidy and high purity. 
 
 ```{r}
 library(BubbleTree)
@@ -126,7 +184,7 @@ allPreview <- llply(names(allCall.lst), function(nn){
     cc <- allCall.lst[[nn]]
     z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
     print(z)
-    out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start) # needs to be relevel
+    out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start)
     
     ann <- with(out, {
         annoByGenesAndCyto(annotator,
@@ -146,7 +204,7 @@ dev.off()
 
 ```
 
-To perform a BubbleTree analysis with an overlays of other types of genomic annotations.
+BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as comopare the BAF and R scores.
 
 ```{r}
 library(BubbleTree)
@@ -228,7 +286,7 @@ dev.off()
 
 ```
 
-To print out an Excel document of summary results.
+To print out an Excel document of summary of the pre-called CNV data.
 
 ```{r}
 library(BubbleTree)
