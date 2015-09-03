@@ -39,7 +39,9 @@ The B-allele frequency data is extracted using the Bioconductor package `r Biocp
 Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as follows.
 
 ```{r}
-library(BubbleTree)
+suppressMessages(
+    library(BubbleTree)
+)
 ```
 
 allCall.lst is pre-calculated CNV data. allRBD.lst is simply the RBD data from below.
@@ -118,12 +120,12 @@ print(btree)
 Along with the branches from the prediction of the model, bubbles (i.e., the leaves) are depicted on the basis of the real data, where the size of the bubbles are proportional to the length of the homogenous segments. A bubble (i.e. the homogeneous SCNA segment) represents the HDS and R score as measured from the assay, such as WES or WGS data. The location of the bubble determines the allele copy number(s) and prevalence for the SCNA segment. A close proximity between a bubble and branch indicates an integer copy-number (e.g. 15q11.2-14), whereas any deviation between the bubble and branch (e.g, 7q21.11-21.12) is due to either variation in the measurement or a non-integer copy-number – something that occurs with multiple clones harboring different SCNAs over the same region.)
 
 
-## BubbleTree plot for lung cancer WGS samples using adjusted and non-adjusted CNV data.
+## BubbleTree plot for a WGS sample using adjusted and non-adjusted CNV data.
 
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
-sample <- allCall.lst[["lung.wgs"]]
+sample <- allCall.lst[["sam13"]]
 rbd1 <- sample@rbd
 rbd2 <- sample@rbd.adj
 arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)
@@ -131,12 +133,12 @@ btree <- drawBTree(btreeplotter, rbd1) + drawBubbles(btreeplotter, rbd2, "gray80
 print(btree)
 ```
 
-## BubbleTree plot for lung cancer WGS samples using only non-adjusted CNV data.
+## BubbleTree plot for a WGS sample using only non-adjusted CNV data.
 
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
-sample <- allCall.lst[["lung.wgs"]]
+sample <- allCall.lst[["sam13"]]
 rbd1 <- sample@rbd
 rbd2 <- sample@rbd.adj
 arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)

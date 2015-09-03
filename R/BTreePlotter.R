@@ -183,7 +183,8 @@ setMethod(f="trackBTree",
                                       fill=src.seqnames),
                                   size=1,
                                   alpha=0.5,
-                                  arrow=arrow(length = unit(0.3, "cm")))
+                                  arrow=arrow(length = unit(0.3, "cm")),
+                                  na.rm=TRUE)
               return(out)
           }
 )
