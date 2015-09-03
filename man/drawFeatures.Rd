@@ -13,9 +13,9 @@ drawFeatures(.Object, rbd, col = NULL)
 \arguments{
 \item{.Object}{the object}
 
-\item{col}{the col value}
+\item{rbd}{the rbd object}
 
-\item{data}{additional annotation to plot}
+\item{col}{the col value}
 }
 \value{
 draw the annotation on the track
