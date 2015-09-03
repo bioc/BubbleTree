@@ -94,12 +94,13 @@ setMethod("initialize",
                   geom_line(aes(cex=p*my.scale+0.5),
                             alpha=0.1) +
                   geom_point(aes(cex=my.scale*p+4),
-                             pch=15, colour = "white") +
+                             pch=15, colour = "white", na.rm=TRUE) +
                   geom_text(aes(cex=my.scale*p + 0.1,
                                 label=round(p*100),
                                 angle=ifelse(x!=y, 0, 90)),
                             alpha=1) +
-                  geom_point(x=1, y=0, pch=16, size=5, col="gray50") +
+                  geom_point(x=1, y=0, pch=16, size=5, 
+                             col="gray50", na.rm=TRUE) +
                   geom_text(data=branches.text,
                             aes(x=R, y=HDS, label=Genotype),
                             adj=0,
@@ -258,7 +259,8 @@ setMethod("drawBTree",
                                  group=NULL),
                              col="gray50",
                              pch=21,
-                             alpha=0.7) +
+                             alpha=0.7,
+                             na.rm=TRUE) +
                   guides(size=FALSE, color=FALSE)
 
               # add the chr legend
@@ -318,7 +320,8 @@ setMethod("drawBubbles",
                                             group=NULL),
                                         col=col,
                                         pch=21,
-                                        alpha=0.7) +
+                                        alpha=0.7,
+                                        na.rm=TRUE) +
                       guides(size=FALSE, color=FALSE, fill=FALSE)
               }else{
                   bubbles <- geom_point(data=dat,
@@ -329,7 +332,8 @@ setMethod("drawBubbles",
                                         col="gray50",
                                         fill=col,
                                         pch=21,
-                                        alpha=0.7)
+                                        alpha=0.7,
+                                        na.rm=TRUE)
               }
               return(bubbles)
           }
@@ -365,7 +369,8 @@ setMethod("drawFeatures",
                                          group=NULL),
                                      col="black",
                                      fill=col,
-                                     pch="-")
+                                     pch="-",
+                                     na.rm=TRUE)
               
               return(features)
           }
