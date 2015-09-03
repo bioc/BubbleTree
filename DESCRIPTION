@@ -11,13 +11,13 @@ Authors@R: c(
             role = c("aut","cre")),
     person("Michael", "Kuziora", 
             email = "kuzioram@medimmune.com", 
-            role = c("aut","cre")),
+            role = c("aut","ctb")),
     person("Todd", "Creasy", 
             email = "creasyt@medimmune.com", 
-            role = c("aut","cre")),
+            role = c("aut","ctb")),
     person("Brandon", "W.", "Higgs", 
             email = "higgsb@medimmune.com", 
-            role = c("aut","cre"))
+            role = c("aut","ctb"))
     )    
 Author: Wei Zhu <zhuw@medimmune.com>, 
         Michael Kuziora <kuzioram@medimmune.com>, 
