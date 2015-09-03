@@ -18,7 +18,7 @@ BiocStyle::markdown()
 
 To evaluate the aneuploidy and prevalence of clonal or quasiclonal tumors, we developed a novel tool to characterize the mosaic tumor genome on the basis of one major assumption: the genome of a heterogeneous multi-cell tumor biopsy can be sliced into a chain of segments that are characterized by homogeneous somatic copy number alternations (SCNAs) and B allele frequencies (BAFs). The model, termed BubbleTree, utilizes both SCNAs and the interconnected BAFs as markers of tumor clones to extract tumor clonality estimates. BubbleTree is an intuitive and powerful approach to jointly identify ASCN, tumor purity and (sub)clonality, which aims to improve upon current methods to characterize the tumor karyotypes and ultimately better inform cancer diagnosis, prognosis and treatment decisions.
 
-## Quickstart to Using BubbleTree
+# Quickstart to Using BubbleTree
 
 To perform a BubbleTree analysis, data pertaining to the position and B allele frequency of heterozygous snps in the tumor sample and segmented copy number information including the position, number of markers/segment and log2 copy number ratio between tumor and normal samples must first be obtained. 
 
@@ -81,13 +81,13 @@ head(cyto.gr)
 head(centromere.dat)
 
 # SNV location data
-head(all.somatic.lst, n=2L)
+head(all.somatic.lst, n=1L)
 
 # sequence variants
-head(allHetero.lst, n=2L)
+head(allHetero.lst, n=1L)
 
 # copy number variation data
-head(allCNV.lst, n=2L)
+head(allCNV.lst, n=1L)
 
 # hg19 sequence data
 hg19.seqinfo
