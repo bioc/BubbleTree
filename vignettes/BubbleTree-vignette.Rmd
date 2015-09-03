@@ -181,12 +181,14 @@ results <- list()
 for (name in names(allCall.lst)) {
     results[[name]] <- allCall.lst[[name]]@result$dist
 }
+```
 
+Run this code to print out an Excel file
+```
 xls.filename <- paste("all_calls_report", "xlsx", sep=".")
 saveXLS(results, xls.filename)
 
 ```
-
 
 ## BubbleTree plot with an overlay of 77 common cancer genes (black rectangles).
 
