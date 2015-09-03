@@ -53,16 +53,41 @@ head(allCall.lst[[1]]@rbd)
 
 The remaining datasets used to support the CNV data display on the BubbleTree plots.
 
-```
-load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree")) # list of 379 known cancer genes
-load(system.file("data", "vol.genes.rda", package="BubbleTree")) # another list of 105 known cancer genes
+```{r}
+load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree")) 
+# list of 379 known cancer genes
+head(cancer.genes.minus2)
+
+load(system.file("data", "vol.genes.rda", package="BubbleTree"))
+# another list of 105 known cancer genes
+head(vol.genes)
+
 load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
-load(system.file("data", "cyto.gr.rda", package="BubbleTree")) # load cytoband coordinate data
-load(system.file("data", "centromere.dat.rda", package="BubbleTree")) # load centromere coordinate data
-load(system.file("data", "all.somatic.lst.RData", package="BubbleTree")) # load SNV location data
-load(system.file("data", "allHetero.lst.RData", package="BubbleTree")) # load sequence variants
-load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) # load copy number variation data
-load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) # load hg19 sequence data
+head(gene.uni.clean.gr)
+
+load(system.file("data", "cyto.gr.rda", package="BubbleTree")) 
+# cytoband coordinate data
+head(cyto.gr)
+
+load(system.file("data", "centromere.dat.rda", package="BubbleTree")) 
+# centromere coordinate data
+head(centromere.dat)
+
+load(system.file("data", "all.somatic.lst.RData", package="BubbleTree")) 
+# SNV location data
+head(all.somatic.lst)
+
+load(system.file("data", "allHetero.lst.RData", package="BubbleTree")) 
+# sequence variants
+head(allHetero.lst)
+
+load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) 
+# copy number variation data
+head(allCNV.lst)
+
+load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) 
+# hg19 sequence data
+head(hg19.seqinfo)
 ```
 
 # Main Bubbletree Functions
@@ -94,13 +119,13 @@ btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
 print(btreeplotter@branches)
 ```
 
+The below plot introduces the relationship between HDS and R score (copy number ratio), both used to elucidate the tumor cell prevalence, ploidy state, and clonality for a tumor sample. Generally, the R score indicates the copy number change, ranging from 0 (homozygous deletion) to 3 (hexaploidy) or higher, while the HDS represents LOH, ranging from values of 0 to 0.5 (i.e., LOH with 100% prevalence). Each branch in the diagram starts at the root (1,0), a value of HDS=0 and R score=1. Namely, a diploid heterozygous genotype segment has a copy number ratio, or R score of 1 (tumor DNA copies=2; normal DNA copies=2, so 2/2=1) with no LOH (HDS=0) and is indicated with a genotype of AB, where the A allele is from one parent and the B allele is from the other parent presumably. Then from the root (1,0), the segment prevalence values are provided in increasing increments of 10%, with each branch representing a different ploidy state. As the values increase along the y-axis, the occurrence of LOH increases, such that on the AA/BB branch at HDS=0.5 and R score=1, this indicates a disomy state with LOH and 100% prevalence for the segment.
+
 <div style="text-align: center; font-weight: bold;">
 BubbleTree plots for Primary Liver Tumor
 <img src="figures/HCC11_Primary_with_ann.png"/ style="width: 100%; height: auto; border: 1px solid;"/>
 </div>
-
-
-The above plot introduces the relationship between HDS and R score (copy number ratio), both used to elucidate the tumor cell prevalence, ploidy state, and clonality for a tumor sample. Generally, the R score indicates the copy number change, ranging from 0 (homozygous deletion) to 3 (hexaploidy) or higher, while the HDS represents LOH, ranging from values of 0 to 0.5 (i.e., LOH with 100% prevalence). Each branch in the diagram starts at the root (1,0), a value of HDS=0 and R score=1. Namely, a diploid heterozygous genotype segment has a copy number ratio, or R score of 1 (tumor DNA copies=2; normal DNA copies=2, so 2/2=1) with no LOH (HDS=0) and is indicated with a genotype of AB, where the A allele is from one parent and the B allele is from the other parent presumably. Then from the root (1,0), the segment prevalence values are provided in increasing increments of 10%, with each branch representing a different ploidy state. As the values increase along the y-axis, the occurrence of LOH increases, such that on the AA/BB branch at HDS=0.5 and R score=1, this indicates a disomy state with LOH and 100% prevalence for the segment.
+<br/>
 
 Generally, the branches mark the projected positions of segments at the given integer copy number ploidy states and prevalence. The plot clearly highlights how high prevalence values create distinct separation between branches (i.e., ploidy states), while as prevalence approaches zero, the branches are non-distinguishable. The ploidy states of Φ, AABB, and AAABBB all have HDS scores of 0, which indicate no LOH at increasing or decreasing R scores from a value of 1, and therefore differ most from the copy number neutral heterozygous disomy state (AB) by R score only. These three ploidy states indicate homozygous deletion (Φ) or amplifications (AABB=1 DNA copy number gain each allele, AAABBB=2 DNA copy number gains each allele). Other ploidy states such as ABB (brown), ABBB (blue), ABBBB (green), or ABBBBB (purple) share a piece of the same branch (i.e., the indistinguishable branches), suggesting the existence of multiple likely combinations of prevalence and ploidy states for that region. A tumor clone usually has more than one SCNA, so the abundance of the clone can still be inferred from other distinguishable branches.
 
@@ -174,6 +199,12 @@ btreepredictor@config$high.purity <- high.purity[nn]
 btreepredictor <- loadRBD(btreepredictor, rbd)
 btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size, na.rm=TRUE) < 0.4, 0.1, 0.4)
 btreepredictor <- btpredict(btreepredictor)
+```
+
+## Tumor Purity
+The purity, or prevalence of tumor cells within the tumor, can be determined from the SCNA segments at the highest HDS values, assuming the tumor cells all harbor some proportion of SCNAs or LOH.
+
+```{r}
 cat(info(btreepredictor), "\n")
 
 names(allCall.lst) <- names(allRBD.lst)
@@ -183,7 +214,7 @@ for (name in names(allCall.lst)) {
 }
 ```
 
-Run this code to print out an Excel file
+Run this code to print out an Excel file of the same report
 ```
 xls.filename <- paste("all_calls_report", "xlsx", sep=".")
 saveXLS(results, xls.filename)
@@ -228,7 +259,9 @@ print(v)
 ```
 
 
-## BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as compare the BAF and R scores.
+## BAF and Heterozygosity Graph
+
+BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as compare the BAF and R scores.
 
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
@@ -271,7 +304,9 @@ gridExtra::grid.arrange(t1,t2, ncol=1)
 ```
 
 
-## To perform a comparison of cancer datasets.
+## Perform a comparison of cancer datasets.
+
+Show the SCNV changes between the recurrent tumor and the primary tumor.
 
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
