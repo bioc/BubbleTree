@@ -7,23 +7,28 @@ Version: 1.99.1
 Date: 2015-08-27
 Authors@R: c(
     person("Wei", "Zhu", 
-    email = "zhuw@medimmune.com", 
-    role = c("aut","cre")),
+            email = "zhuw@medimmune.com", 
+            role = c("aut","cre")),
     person("Michael", "Kuziora", 
-    email = "kuzioram@medimmune.com", 
-    role = c("aut","cre")),
+            email = "kuzioram@medimmune.com", 
+            role = c("aut","cre")),
     person("Todd", "Creasy", 
-    email = "creasyt@medimmune.com", 
-    role = c("aut","cre")),
+            email = "creasyt@medimmune.com", 
+            role = c("aut","cre")),
     person("Brandon", "W.", "Higgs", 
-    email = "higgsb@medimmune.com", 
-    role = c("aut","cre"))
-)    
-Author: Wei Zhu <zhuw@medimmune.com>, Michael Kuziora <kuzioram@medimmune.com>, Todd Creasy <creasyt@medimmune.com>, Brandon Higgs <higgsb@medimmune.com>
+            email = "higgsb@medimmune.com", 
+            role = c("aut","cre"))
+    )    
+Author: Wei Zhu <zhuw@medimmune.com>, 
+        Michael Kuziora <kuzioram@medimmune.com>, 
+        Todd Creasy <creasyt@medimmune.com>, 
+        Brandon Higgs <higgsb@medimmune.com>
 Maintainer: Wei Zhu <zhuw@medimmune.com>
 Description: CNV analysis in groups of tumor samples (Publication Pending).
 License: LGPL (>= 3)
-Imports: BiocGenerics (>= 0.7.5), BiocStyle, Biobase, ggplot2, WriteXLS, gtools, RColorBrewer, limma, scales, rgl, grid, gtable, gridExtra, biovizBase, rainbow
+Imports: BiocGenerics (>= 0.7.5), BiocStyle, Biobase, ggplot2, WriteXLS, gtools, 
+        RColorBrewer, limma, scales, rgl, grid, gtable, gridExtra, 
+        biovizBase, rainbow
 Depends: R (>= 3.2.1), IRanges, GenomicRanges, plyr, dplyr, magrittr
 Suggests: methods, knitr, rmarkdown
 biocViews: CopyNumberVariation, Software, Sequencing, Coverage
