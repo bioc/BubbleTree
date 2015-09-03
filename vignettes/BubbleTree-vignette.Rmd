@@ -55,39 +55,42 @@ The remaining datasets used to support the CNV data display on the BubbleTree pl
 
 ```{r}
 load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree")) 
-# list of 379 known cancer genes
-head(cancer.genes.minus2)
-
 load(system.file("data", "vol.genes.rda", package="BubbleTree"))
+load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
+load(system.file("data", "cyto.gr.rda", package="BubbleTree")) 
+load(system.file("data", "centromere.dat.rda", package="BubbleTree")) 
+load(system.file("data", "all.somatic.lst.RData", package="BubbleTree"))
+load(system.file("data", "allHetero.lst.RData", package="BubbleTree")) 
+load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) 
+load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) 
+```
+
+```{r}
+# lists of 379 known cancer genes
+head(cancer.genes.minus2)
 # another list of 105 known cancer genes
 head(vol.genes)
 
-load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
+# full gene annotation Grange object
 head(gene.uni.clean.gr)
 
-load(system.file("data", "cyto.gr.rda", package="BubbleTree")) 
 # cytoband coordinate data
 head(cyto.gr)
 
-load(system.file("data", "centromere.dat.rda", package="BubbleTree")) 
 # centromere coordinate data
 head(centromere.dat)
 
-load(system.file("data", "all.somatic.lst.RData", package="BubbleTree")) 
 # SNV location data
-head(all.somatic.lst)
+head(all.somatic.lst, n=2L)
 
-load(system.file("data", "allHetero.lst.RData", package="BubbleTree")) 
 # sequence variants
-head(allHetero.lst)
+head(allHetero.lst, n=2L)
 
-load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) 
 # copy number variation data
-head(allCNV.lst)
+head(allCNV.lst, n=2L)
 
-load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) 
 # hg19 sequence data
-head(hg19.seqinfo)
+hg19.seqinfo
 ```
 
 # Main Bubbletree Functions
@@ -236,7 +239,7 @@ comm <- btcompare(vol.genes, cancer.genes.minus2)
 btreeplotter <- new("BTreePlotter", branch.col="gray50")
 annotator <- new("Annotate")
 
-nn <- "sam12"
+nn <- "sam13"
 cc <- allCall.lst[[nn]]
 z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
 out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start)
@@ -359,3 +362,9 @@ xls.filename <- paste("all_summary", "xlsx", sep=".")
 saveXLS(list(Summary=all.summary), xls.filename)
 
 ```
+
+# Citation
+
+<b>BubbleTree: an intuitive visualization to elucidate tumoral aneuploidy and clonality in somatic mosaicism using next generation sequencing data.</b> Wei Zhu, Michael Kuziora, Todd Creasy, Zhongwu Lai, Christopher Morehouse, Xiang Guo, Yinong Sebastian, Zheng Liu, Dong Shen, Jiaqi Huang, Feng Xue, Liyan Jiang, Yihong Yao, Brandon W. Higgs. Publication Pending (2015)
+
+
