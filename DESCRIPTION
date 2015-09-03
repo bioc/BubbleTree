@@ -1,8 +1,24 @@
 Package: BubbleTree
 Type: Package
-Title: CNV analysis in groups of tumor samples
+Title: BubbleTree: an intuitive visualization to elucidate tumoral 
+        aneuploidy and clonality in somatic mosaicism using next 
+        generation sequencing data.
 Version: 1.99.1
 Date: 2015-08-27
+Authors@R: c(
+    person("Wei", "Zhu", 
+    email = "zhuw@medimmune.com", 
+    role = c("aut","cre")),
+    person("Michael", "Kuziora", 
+    email = "kuzioram@medimmune.com", 
+    role = c("aut","cre")),
+    person("Todd", "Creasy", 
+    email = "creasyt@medimmune.com", 
+    role = c("aut","cre")),
+    person("Brandon", "W.", "Higgs", 
+    email = "higgsb@medimmune.com", 
+    role = c("aut","cre"))
+)    
 Author: Wei Zhu <zhuw@medimmune.com>, Michael Kuziora <kuzioram@medimmune.com>, Todd Creasy <creasyt@medimmune.com>, Brandon Higgs <higgsb@medimmune.com>
 Maintainer: Wei Zhu <zhuw@medimmune.com>
 Description: CNV analysis in groups of tumor samples (Publication Pending).
