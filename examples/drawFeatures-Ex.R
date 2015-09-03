@@ -12,8 +12,10 @@ annotator <- new("Annotate")
 
 nn <- "sam12"
 cc <- allCall.lst[[nn]]
-z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
-out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start)
+z <- drawBTree(btreeplotter, cc@rbd.adj) + 
+    ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
+out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% 
+    arrange(gtools::mixedorder(as.character(seqnames)), start)
 
 ann <- with(out, {
     annoByGenesAndCyto(annotator,

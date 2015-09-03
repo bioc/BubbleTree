@@ -4,7 +4,8 @@ load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 all.summary <- plyr::ldply(allCall.lst, function(.Object) {
     purity <- .Object@result$prev[1]
     adj <- .Object@result$ploidy.adj["adj"]
-    ploidy <- (2*adj -2)/purity + 2  # when purity is low the calculation result is not reliable
+    # when purity is low the calculation result is not reliable
+    ploidy <- (2*adj -2)/purity + 2  
     
     with(.Object@result,
          return(c(Purity=round(purity,3),

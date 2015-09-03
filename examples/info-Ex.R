@@ -23,6 +23,7 @@ rbd <- allRBD.lst[[nn]]
 btreepredictor@config$high.ploidy <- high.ploidy[nn]
 btreepredictor@config$high.purity <- high.purity[nn]
 btreepredictor <- loadRBD(btreepredictor, rbd)
-btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size, na.rm=TRUE) < 0.4, 0.1, 0.4)
+btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size, 
+                                                na.rm=TRUE) < 0.4, 0.1, 0.4)
 btreepredictor <- btpredict(btreepredictor)
 cat(info(btreepredictor), "\n")

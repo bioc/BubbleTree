@@ -11,4 +11,5 @@ comm <- btcompare(vol.genes, cancer.genes.minus2)
 btreeplotter <- new("BTreePlotter", branch.col="gray50")
 annotator <-new("Annotate")
 cc <- allCall.lst[["sam2"]]
-z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", "sam2", info(cc)))
+z <- drawBTree(btreeplotter, cc@rbd.adj) + 
+    ggplot2::labs(title=sprintf("%s (%s)", "sam2", info(cc)))
