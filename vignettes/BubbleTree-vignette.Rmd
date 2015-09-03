@@ -1,23 +1,17 @@
-
 ---
 title: "BubbleTree Tutorial"
 author: "Wei Zhu, Michael Kuziora, Todd Creasy, Brandon Higgs"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  BiocStyle::html_document:
+    toc: true
 vignette: > 
-    %\VignettePackage{BubbleTree}
-    %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteIndexEntry{BubbleTree Tutorial}
-    %\VignetteKeyword{CNV}
-    %\VignetteKeyword{CopyNumberVariation}
-    \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{BubbleTree Tutorial}
+  \usepackage[utf8]{inputenc}
 ---
 
-```{r style, echo = FALSE, results = 'asis'}
-BiocStyle::markdown()
-```
-
-## Introduction
+# Introduction
 
 To evaluate the aneuploidy and prevalence of clonal or quasiclonal tumors, we developed a novel tool to characterize the mosaic tumor genome on the basis of one major assumption: the genome of a heterogeneous multi-cell tumor biopsy can be sliced into a chain of segments that are characterized by homogeneous somatic copy number alternations (SCNAs) and B allele frequencies (BAFs). The model, termed BubbleTree, utilizes both SCNAs and the interconnected BAFs as markers of tumor clones to extract tumor clonality estimates. BubbleTree is an intuitive and powerful approach to jointly identify ASCN, tumor purity and (sub)clonality, which aims to improve upon current methods to characterize the tumor karyotypes and ultimately better inform cancer diagnosis, prognosis and treatment decisions.
 
@@ -31,7 +25,7 @@ BubbleTree was developed using both whole exome sequencing (WES) and whole genom
 
 There are many methods for generating and processing sequencing data in preparation for BubbleTree analysis. In the following section we provide example workflows starting from WES NGS which can be adapted as needed to alternate inputs.
 
-### Preparing Sequence Variation Data
+## Preparing Sequence Variation Data
 
 The primary BubbleTree requirement for sequence variant information is a `r Biocpkg("GRanges")` object containing the B alelle frequencies and genomic positions of variants known to be heterozygous in the paired normal sample.
 
@@ -45,17 +39,16 @@ Example data in the desired format is provided as part of this package as GRange
 library(BubbleTree)
 ```
 
-allCall.lst is pre-calculated CNV data from...
-allRBD.lst is pre-calculated CNV data but ...
+allCall.lst is pre-calculated CNV data. allRBD.lst is simply the RBD data from below.
 
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
-load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))
+head(allCall.lst[[1]]@rbd)
 ```
 
 The remaining datasets used to support the CNV data display on the BubbleTree plots.
 
-```{r}
+```
 load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree")) # list of 379 known cancer genes
 load(system.file("data", "vol.genes.rda", package="BubbleTree")) # another list of 105 known cancer genes
 load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
@@ -67,56 +60,92 @@ load(system.file("data", "allCNV.lst.RData", package="BubbleTree")) # load copy 
 load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree")) # load hg19 sequence data
 ```
 
-This will create BubbleTree plots for all 41 samples using adjusted and non-adjusted CNV data.
+# Main Bubbletree Functions
+
+## BubbleTree model and diagram
+BubbleTree is a model based on three valid assumptions: 1) the paired normal specimen expresses the common diploid state, 2) variant sites are bi-allelic, and 3) genome segments (rather than the whole genome) with homogeneous copy number ratio and BAFs, exist in the profiled tumor genome. The first two assumptions generally hold, whereas the last homogeneity assumption can also be satisfied even in the case of a complex tumor clonal structure.
+
+As the three assumptions are all generally plausible, we therefore developed a model for the BubbleTree diagram. For one homogenous genomic segment (x:y;p), we have,
+
+Expected copy number, (CN)=2×(1-p)+(x+y)×p
+
+Copy Ratio, R=(CN)/2=(1-p)+(x+y)/2×p (1)
+
+B allele frequency, BAF=(y×p+1×(1-p))/((x+y)×p+2×(1-p))
+
+and the homozygous-deviation score (HDS),
+
+HDS= ∣BAF-0.5∣=(p×∣y-x∣)/(2×[(x+y)×p+2×(1-p)]) (2)
+
+Based on equations (1) and (2), we are able to calculate an R score (copy ratio) and HDS for a segment (x:y; p). For example, (0:1; 0.75) will provide 0.625 and 0.3 for the R scores and HDS, respectively.
+
+
+## Description of the BubblePlot Graph
+
+### The Branches
 
 ```{r}
-library(BubbleTree)
-load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
-
 btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
-
-pdf.filename <- paste("adjplot_all", "pdf", sep=".")
-pdf(pdf.filename, width=6, height=4)
-
-l_ply(names(allCall.lst), function(nn){
-    cat("Processing sample name: ", nn, "\n")
-    rbd1 <- allCall.lst[[nn]]@rbd
-    rbd2 <- allCall.lst[[nn]]@rbd.adj
-    arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)
-    btree <- drawBTree(btreeplotter, rbd1) + drawBubbles(btreeplotter, rbd2, "gray80") + arrows
-    print(btree)
-})
-dev.off()
-
+print(btreeplotter@branches)
 ```
 
-This will create BubbleTree plots for all 41 samples using only non-adjusted CNV data.
+<div style="text-align: center; font-weight: bold;">
+BubbleTree plots for Primary Liver Tumor
+<img src="figures/HCC11_Primary_with_ann.png"/ style="width: 100%; height: auto; border: 1px solid;"/>
+</div>
+
+
+The above plot introduces the relationship between HDS and R score (copy number ratio), both used to elucidate the tumor cell prevalence, ploidy state, and clonality for a tumor sample. Generally, the R score indicates the copy number change, ranging from 0 (homozygous deletion) to 3 (hexaploidy) or higher, while the HDS represents LOH, ranging from values of 0 to 0.5 (i.e., LOH with 100% prevalence). Each branch in the diagram starts at the root (1,0), a value of HDS=0 and R score=1. Namely, a diploid heterozygous genotype segment has a copy number ratio, or R score of 1 (tumor DNA copies=2; normal DNA copies=2, so 2/2=1) with no LOH (HDS=0) and is indicated with a genotype of AB, where the A allele is from one parent and the B allele is from the other parent presumably. Then from the root (1,0), the segment prevalence values are provided in increasing increments of 10%, with each branch representing a different ploidy state. As the values increase along the y-axis, the occurrence of LOH increases, such that on the AA/BB branch at HDS=0.5 and R score=1, this indicates a disomy state with LOH and 100% prevalence for the segment.
+
+Generally, the branches mark the projected positions of segments at the given integer copy number ploidy states and prevalence. The plot clearly highlights how high prevalence values create distinct separation between branches (i.e., ploidy states), while as prevalence approaches zero, the branches are non-distinguishable. The ploidy states of Φ, AABB, and AAABBB all have HDS scores of 0, which indicate no LOH at increasing or decreasing R scores from a value of 1, and therefore differ most from the copy number neutral heterozygous disomy state (AB) by R score only. These three ploidy states indicate homozygous deletion (Φ) or amplifications (AABB=1 DNA copy number gain each allele, AAABBB=2 DNA copy number gains each allele). Other ploidy states such as ABB (brown), ABBB (blue), ABBBB (green), or ABBBBB (purple) share a piece of the same branch (i.e., the indistinguishable branches), suggesting the existence of multiple likely combinations of prevalence and ploidy states for that region. A tumor clone usually has more than one SCNA, so the abundance of the clone can still be inferred from other distinguishable branches.
+
+### The Bubbles
 
 ```{r}
-library(BubbleTree)
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
-
 btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
-
-pdf.filename <- paste("adjplot_single", "pdf", sep=".")
-pdf(pdf.filename, width=8, height=6)
-
-l_ply(names(allCall.lst), function(nn){
-    cat("Processing sample name: ", nn, "\n")
-    rbd1 <- allCall.lst[[nn]]@rbd
-    rbd2 <- allCall.lst[[nn]]@rbd.adj
-    arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.1, min.trtSize=0.1)
-    btree <- drawBTree(btreeplotter, rbd1)  + arrows
-    print(btree)
-})
-dev.off()
-
+sample <- allCall.lst[["sam10"]]
+rbd1 <- sample@rbd
+rbd2 <- sample@rbd.adj
+arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)
+btree <- drawBTree(btreeplotter, rbd1)
+print(btree)
 ```
 
-To generate a Excel report of a BubbleTree analysis. This report only shows samples that have tumors with high ploidy and high purity. 
+Along with the branches from the prediction of the model, bubbles (i.e., the leaves) are depicted on the basis of the real data, where the size of the bubbles are proportional to the length of the homogenous segments. A bubble (i.e. the homogeneous SCNA segment) represents the HDS and R score as measured from the assay, such as WES or WGS data. The location of the bubble determines the allele copy number(s) and prevalence for the SCNA segment. A close proximity between a bubble and branch indicates an integer copy-number (e.g. 15q11.2-14), whereas any deviation between the bubble and branch (e.g, 7q21.11-21.12) is due to either variation in the measurement or a non-integer copy-number – something that occurs with multiple clones harboring different SCNAs over the same region.)
+
+
+## BubbleTree plot for lung cancer WGS samples using adjusted and non-adjusted CNV data.
 
 ```{r}
-library(BubbleTree)
+load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
+btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
+sample <- allCall.lst[["lung.wgs"]]
+rbd1 <- sample@rbd
+rbd2 <- sample@rbd.adj
+arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)
+btree <- drawBTree(btreeplotter, rbd1) + drawBubbles(btreeplotter, rbd2, "gray80") + arrows
+print(btree)
+```
+
+## BubbleTree plot for lung cancer WGS samples using only non-adjusted CNV data.
+
+```{r}
+load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
+btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
+sample <- allCall.lst[["lung.wgs"]]
+rbd1 <- sample@rbd
+rbd2 <- sample@rbd.adj
+arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01, min.trtSize=0.01)
+btree <- drawBTree(btreeplotter, rbd1) + arrows
+print(btree)
+```
+
+## View data and generate Excel report
+
+This report only shows samples that have tumors with high ploidy and high purity. 
+
+```{r}
 load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))
 btreepredictor <- new("BTreePredictor")
 btreepredictor@config$cutree.h <- 0.15
@@ -133,20 +162,14 @@ high.ploidy[c("sam6",
 
 high.purity[c("sam6", "ovary.wgs", "ovary.wes")] <- FALSE
 
-
-allCall.lst <- plyr::llply(names(allRBD.lst), function(nn) {
-    cat("Processing sample name: ", nn, "\n")
-    rbd <- allRBD.lst[[nn]]
-    btreepredictor@config$high.ploidy <- high.ploidy[nn]
-    btreepredictor@config$high.purity <- high.purity[nn]
-    btreepredictor <- loadRBD(btreepredictor, rbd)
-    btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size, na.rm=TRUE) < 0.4, 0.1, 0.4)
-    
-    btreepredictor <- btpredict(btreepredictor)
-    
-    cat(info(btreepredictor), "\n")
-    return(btreepredictor)
-})
+nn <- "sam13"
+rbd <- allRBD.lst[[nn]]
+btreepredictor@config$high.ploidy <- high.ploidy[nn]
+btreepredictor@config$high.purity <- high.purity[nn]
+btreepredictor <- loadRBD(btreepredictor, rbd)
+btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size, na.rm=TRUE) < 0.4, 0.1, 0.4)
+btreepredictor <- btpredict(btreepredictor)
+cat(info(btreepredictor), "\n")
 
 names(allCall.lst) <- names(allRBD.lst)
 results <- list()
@@ -155,59 +178,51 @@ for (name in names(allCall.lst)) {
 }
 
 xls.filename <- paste("all_calls_report", "xlsx", sep=".")
-print(xls.filename)
 saveXLS(results, xls.filename)
 
 ```
 
-To perform a BubbleTree analysis with an overlay of 77 common cancer genes.
+
+## BubbleTree plot with an overlay of 77 common cancer genes (black rectangles).
 
 ```{r}
-library(BubbleTree)
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree"))
 load(system.file("data", "vol.genes.rda", package="BubbleTree"))
 load(system.file("data", "gene.uni.clean.gr.rda", package="BubbleTree"))
 load(system.file("data", "cyto.gr.rda", package="BubbleTree"))
 
-# 77 common cancer genes
+# 77 common cancer genes merged from 2 sets
 comm <- btcompare(vol.genes, cancer.genes.minus2)
 
 btreeplotter <- new("BTreePlotter", branch.col="gray50")
-annotator <-new("Annotate")
+annotator <- new("Annotate")
 
-pdf.filename <- paste("bubbletree_preview", "pdf", sep=".")
-pdf(pdf.filename, width=10, height=6)
+nn <- "sam12"
+cc <- allCall.lst[[nn]]
+z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
+out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start)
 
-allPreview <- llply(names(allCall.lst), function(nn){
-    cat("Processing sample name: ", nn, "\n")
-    cc <- allCall.lst[[nn]]
-    z <- drawBTree(btreeplotter, cc@rbd.adj) + ggplot2::labs(title=sprintf("%s (%s)", nn, info(cc)))
-    print(z)
-    out <- cc@result$dist  %>% filter(seg.size >= 0.1 ) %>% arrange(gtools::mixedorder(as.character(seqnames)), start)
-    
-    ann <- with(out, {
-        annoByGenesAndCyto(annotator,
-                           as.character(out$seqnames),
-                           as.numeric(out$start),
-                           as.numeric(out$end),
-                           comm$comm,
-                           gene.uni.clean.gr=gene.uni.clean.gr,
-                           cyto.gr=cyto.gr)
-    })
-    
-    out$cyto <- ann$cyto
-    out$genes <- ann$ann
-    return(out)
+ann <- with(out, {
+    annoByGenesAndCyto(annotator,
+                       as.character(out$seqnames),
+                       as.numeric(out$start),
+                       as.numeric(out$end),
+                       comm$comm,
+                       gene.uni.clean.gr=gene.uni.clean.gr,
+                       cyto.gr=cyto.gr)
 })
-dev.off()
+
+out$cyto <- ann$cyto
+out$genes <- ann$ann
+v <- z + drawFeatures(btreeplotter, out)
+print(v)
 
 ```
 
-BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as comopare the BAF and R scores.
 
+## BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as compare the BAF and R scores.
 ```{r}
-library(BubbleTree)
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 load(system.file("data", "centromere.dat.rda", package="BubbleTree"))
 load(system.file("data", "all.somatic.lst.RData", package="BubbleTree"))
@@ -217,78 +232,77 @@ load(system.file("data", "hg19.seqinfo.rda", package="BubbleTree"))
 
 trackplotter <- new("TrackPlotter")
 
-gr2 = centromere.dat
+nn <- "sam12"
+ymax <- ifelse(nn %in% c("lung.wgs", "lung.wes"), 9, 4.3)
 
-pdf.filename <- paste("all_tracks3", "pdf", sep=".")
-pdf(pdf.filename, width=10, height=7)
+p1 <- xyTrack(trackplotter,
+              result.dat=allCall.lst[[nn]]@result,
+              gr2=centromere.dat,
+              ymax=ymax) + ggplot2::labs(title=nn)
 
-plyr::l_ply(names(allCall.lst), function(nn) {
-    cat("Processing sample name: ", nn, "\n")
-    ymax <- ifelse(nn %in% c("lung.wgs", "lung.wes"), 9, 4.3)
-    
-    p1 <- xyTrack(trackplotter,
-                  result.dat=allCall.lst[[nn]]@result,
-                  gr2=gr2,
-                  ymax=ymax) + ggplot2::labs(title=nn)
-    
-    p2 <- bafTrack(trackplotter,
-                   result.dat=allCall.lst[[nn]]@result,
-                   gr2=gr2,
-                   somatic.gr=all.somatic.lst[[nn]])
-    
-    t1 <- getTracks(p1, p2)
-    
-    z1 <- heteroLociTrack(trackplotter, allCall.lst[[nn]]@result, gr2, allHetero.lst[[nn]])
-    z2 <- RscoreTrack(trackplotter, allCall.lst[[nn]]@result, gr2, allCNV.lst[[nn]])
-    t2 <- getTracks(z1, z2)
-    
-    gridExtra::grid.arrange(t1,t2, ncol=1)
-    
-})
-dev.off()
+p2 <- bafTrack(trackplotter,
+               result.dat=allCall.lst[[nn]]@result,
+               gr2=centromere.dat,
+               somatic.gr=all.somatic.lst[[nn]])
 
+t1 <- getTracks(p1, p2)
+
+z1 <- heteroLociTrack(trackplotter, 
+                      allCall.lst[[nn]]@result, 
+                      centromere.dat, 
+                      allHetero.lst[[nn]])
+
+z2 <- RscoreTrack(trackplotter, 
+                  allCall.lst[[nn]]@result, 
+                  centromere.dat, 
+                  allCNV.lst[[nn]])
+
+t2 <- getTracks(z1, z2)
+
+gridExtra::grid.arrange(t1,t2, ncol=1)
 ```
 
-To perform a comparison of cancer datasets.
+
+## To perform a comparison of cancer datasets.
 
 ```{r}
-library(BubbleTree)
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
-
 btp <- new("BTreePlotter", max.ploidy=5, max.size=10)
-pairs <- list(c("lung.wes", "lung.wgs"),
-              c("HCC4.Primary.Tumor", "HCC4.Recurrent.Tumor"),
-              c("HCC11.Primary.Tumor", "HCC11.Recurrent.Tumor" ))
 
-pdf("medi.comparePlot.single2.pdf", width=8,height=6)
+nn1 <- "HCC11.Primary.Tumor"
+nn2 <- "HCC11.Recurrent.Tumor" 
 
-plyr::l_ply(pairs, function(p){
-    cat(p, "\n")
-    rbd1 <- allCall.lst[[p[1]]]@result$dist
-    rbd2 <- allCall.lst[[p[2]]]@result$dist
-    
-    srcSize <- 0.5
-    trtSize <- ifelse(p[1] == "lung.wes", 0.1, 1)
-    minOver <- ifelse(p[1] == "lung.wes", 5e6, 1e7)
-    arrows <- trackBTree(btp,
-                         rbd1,
-                         rbd2,
-                         min.srcSize=srcSize,
-                         min.trtSize=trtSize,
-                         min.overlap=minOver)
-    
-    z <- drawBTree(btp, rbd1)
-    if(!is.null(arrows))
-        z <- z + arrows + ggplot2::labs(title=sprintf("%s -> %s", p[1], p[2]))
-    print(z)
-})
-dev.off()
+rbd1 <- allCall.lst[[nn1]]@result$dist
+rbd2 <- allCall.lst[[nn2]]@result$dist
+
+srcSize <- 0.5
+trtSize <- 1
+minOver <- 1e7
+
+arrows <- trackBTree(btp,
+                     rbd1,
+                     rbd2,
+                     min.srcSize=srcSize,
+                     min.trtSize=trtSize,
+                     min.overlap=minOver)
+
+z <- drawBTree(btp, rbd1)
+
+if(!is.null(arrows)) {
+    z <- z + arrows + ggplot2::labs(title=sprintf("%s -> %s", nn1, nn2))
+}
+print(z)
 
 ```
 
-To print out an Excel document of summary of the pre-called CNV data.
+<div style="text-align: center; font-weight: bold;">
+Comparison of HCC11 Primary and Recurrent Tumors
+<img src="figures/HCC11_comparison.png"/ style="width: 100%; height: auto; border: 1px solid;"/>
+</div>
 
-```{r}
+## To print out an Excel document of summary of the pre-called CNV data.
+
+```
 library(BubbleTree)
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 

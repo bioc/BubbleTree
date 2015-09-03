@@ -334,3 +334,38 @@ setMethod("drawBubbles",
           }
 )
 
+#' @export
+#' @docType methods
+#' @rdname drawFeatures
+setGeneric(name="drawFeatures",
+           def=function(.Object, rbd, col=NULL) {
+               standardGeneric("drawFeatures")
+           }
+)
+
+#' @title drawFeatures
+#' @rdname drawFeatures
+#' @aliases drawFeatures
+#' @param .Object the object
+#' @param data additional annotation to plot
+#' @param col the col value
+#' @return draw the annotation on the track
+#' @example examples/drawFeatures-Ex.R
+setMethod("drawFeatures",
+          "BTreePlotter",
+          function(.Object, rbd, col="black") {
+              
+              dat <- as.data.frame(rbd) %>% filter(!is.na(hds)) 
+              
+              features <- geom_point(data=dat,
+                                     aes(x=(2^lrr) + .15,
+                                         y=hds, 
+                                         cex=15, 
+                                         group=NULL),
+                                     col="black",
+                                     fill=col,
+                                     pch="-")
+              
+              return(features)
+          }
+)

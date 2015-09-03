@@ -57,9 +57,6 @@ setMethod("xyTrack",
               subclone.prev <- result.dat$prev[2]
 
               cols <- brewer.pal(7,"Set1")
-              # assume gr1 and gr2 has similar seqinfo
-              #seqlevels(gr2) <-  seqlevels(gr1)
-              #seqinfo(gr2) <- seqinfo(gr1)
               baseline.adj <- 0.1
 
               # convert 1,1,1 to 1,1, prev
@@ -91,7 +88,7 @@ setMethod("xyTrack",
                                        lty=1, 
                                        alpha=0.2, 
                                        size = 0.3) +
-                            geom_segment(col=cols[1], size=1)  +
+                            geom_segment(col=cols[1], size=1, na.rm=TRUE)  +
                             geom_segment(data=my.dat, 
                                          aes(x=.start, 
                                              xend=.end, 
@@ -99,8 +96,9 @@ setMethod("xyTrack",
                                              yend=x.adj), 
                                          col=cols[2], 
                                          size=1, 
-                                         inherit.aes=FALSE) +
-                            scale_y_continuous(breaks = seq(0,9,1)) +
+                                         inherit.aes=FALSE,
+                                         na.rm=TRUE) +
+                            #scale_y_continuous(breaks = seq(0,9,1)) +
                             theme(panel.background = element_blank()) +
                             geom_hline(yintercept = 1, 
                                        colour = "gray80", 
@@ -219,13 +217,13 @@ setMethod("bafTrack",
                                            xend=.end, 
                                            y = (p*x)/ ( (x+y)*p + 2*(1-p)), 
                                            yend=(p*x)/( (x+y)*p + 2*(1-p))), 
-                                       col=cols[4], size=1, lty=1) + 
+                                       col=cols[4], size=1, lty=1, na.rm=TRUE) + 
                   geom_segment(data=my.dat, 
                                aes(x=.start, 
                                    xend=.end, 
                                    y = (main.prev-p+p*x)/ ( (x+y)*p + 2*(1-p)), 
                                    yend=(main.prev-p+p*x)/ ((x+y)*p + 2*(1-p))), 
-                               col=cols[3], size=1, lty=1) +  
+                               col=cols[3], size=1, lty=1, na.rm=TRUE) +  
                   geom_segment(data=my.dat, 
                                aes(x=.start, 
                                    xend=.end, 
@@ -233,7 +231,7 @@ setMethod("bafTrack",
                                    yend=y*p/ ( (x+y)*p + 2*(1-p))), 
                                col=cols[2], 
                                size=1, 
-                               lty=1) + 
+                               lty=1, na.rm=TRUE) + 
                   geom_segment(data=my.dat, 
                                aes(x=.start, 
                                    xend=.end, 
@@ -241,7 +239,7 @@ setMethod("bafTrack",
                                    yend=(y*p + main.prev-p)/((x+y)*p+2*(1-p))), 
                                col=cols[1], 
                                size=1, 
-                               lty=1) + 
+                               lty=1, na.rm=TRUE) + 
                   ylim(c(0,1)) + 
                   ylab("Max(BAF)")
 
@@ -361,7 +359,7 @@ setMethod("heteroLociTrack",
                                            yend=0.5 - hds.pred), 
                                        col=cols[2], 
                                        size=2, 
-                                       lty=1) + 
+                                       lty=1, na.rm=TRUE) + 
                   geom_segment(data=my.dat, 
                                aes(x=.start, 
                                    xend=.end, 
@@ -369,7 +367,7 @@ setMethod("heteroLociTrack",
                                    yend=0.5 + hds.pred), 
                                col=cols[2], 
                                size=2, 
-                               lty=1)  + 
+                               lty=1, na.rm=TRUE)  + 
                   ylim(c(0,1)) + 
                   ylab("BAF")
 
@@ -479,7 +477,7 @@ setMethod("RscoreTrack",
                                               yend=2^score), 
                                           inherit.aes=FALSE, 
                                           size=3, 
-                                          col=cols[1], alpha=1)
+                                          col=cols[1], alpha=1, na.rm=TRUE)
               }
 
               p1 <- p0 +  geom_segment(data=my.dat,
@@ -487,7 +485,8 @@ setMethod("RscoreTrack",
                                            xend=.end, 
                                            y=r.pred, 
                                            yend=r.pred), 
-                                       col=cols[2], size=2, lty=1, alpha=1) + 
+                                       col=cols[2], size=2, lty=1, alpha=1,
+                                       na.rm=TRUE) + 
                   ylim(c(0,ymax)) + ylab("R")
 
               p2 <- p1 + scale_x_continuous(breaks = (ss2$.start + ss2$.end)/2,
