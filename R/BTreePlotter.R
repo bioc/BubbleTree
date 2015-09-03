@@ -347,7 +347,7 @@ setGeneric(name="drawFeatures",
 #' @rdname drawFeatures
 #' @aliases drawFeatures
 #' @param .Object the object
-#' @param data additional annotation to plot
+#' @param rbd the rbd object
 #' @param col the col value
 #' @return draw the annotation on the track
 #' @example examples/drawFeatures-Ex.R

@@ -10,6 +10,9 @@ vignette: >
   %\VignetteIndexEntry{BubbleTree Tutorial}
   \usepackage[utf8]{inputenc}
 ---
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
 
 # Introduction
 
@@ -222,6 +225,7 @@ print(v)
 
 
 ## BubbleTree can create a summary visualization that displays the concordance between copy number and max B-allele Frequency for each chromosome as well as compare the BAF and R scores.
+
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 load(system.file("data", "centromere.dat.rda", package="BubbleTree"))
@@ -294,11 +298,6 @@ if(!is.null(arrows)) {
 print(z)
 
 ```
-
-<div style="text-align: center; font-weight: bold;">
-Comparison of HCC11 Primary and Recurrent Tumors
-<img src="figures/HCC11_comparison.png"/ style="width: 100%; height: auto; border: 1px solid;"/>
-</div>
 
 ## To print out an Excel document of summary of the pre-called CNV data.
 
