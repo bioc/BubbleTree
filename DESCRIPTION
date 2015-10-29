@@ -3,7 +3,7 @@ Type: Package
 Title: BubbleTree: an intuitive visualization to elucidate tumoral 
         aneuploidy and clonality in somatic mosaicism using next 
         generation sequencing data.
-Version: 2.1.0
+Version: 2.1.1
 Date: 2015-08-27
 Authors@R: c(
     person("Wei", "Zhu", 
@@ -23,7 +23,7 @@ Author: Wei Zhu <zhuw@medimmune.com>,
         Michael Kuziora <kuzioram@medimmune.com>, 
         Todd Creasy <creasyt@medimmune.com>, 
         Brandon Higgs <higgsb@medimmune.com>
-Maintainer: Wei Zhu <zhuw@medimmune.com>
+Maintainer: Todd Creasy <creasyt@medimmune.com>, Wei Zhu <weizhu365@gmail.com>
 Description: CNV analysis in groups of tumor samples (Publication Pending).
 License: LGPL (>= 3)
 Imports: BiocGenerics (>= 0.7.5), BiocStyle, Biobase, ggplot2, WriteXLS, gtools, 
