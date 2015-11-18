@@ -1,8 +1,8 @@
 Package: BubbleTree
 Type: Package
-Title: BubbleTree: an intuitive visualization to elucidate tumoral 
-        aneuploidy and clonality in somatic mosaicism using next 
-        generation sequencing data.
+Title: BubbleTree: an intuitive visualization to elucidate tumoral
+    aneuploidy and clonality in somatic mosaicism using next
+    generation sequencing data.
 Version: 2.1.2
 Date: 2015-08-27
 Authors@R: c(
@@ -18,19 +18,43 @@ Authors@R: c(
     person("Brandon", "W.", "Higgs", 
             email = "higgsb@medimmune.com", 
             role = c("aut","ctb"))
-    )    
-Author: Wei Zhu <zhuw@medimmune.com>, 
-        Michael Kuziora <kuzioram@medimmune.com>, 
-        Todd Creasy <creasyt@medimmune.com>, 
-        Brandon Higgs <higgsb@medimmune.com>
+    )
+Author: Wei Zhu <zhuw@medimmune.com>,
+    Michael Kuziora <kuzioram@medimmune.com>,
+    Todd Creasy <creasyt@medimmune.com>,
+    Brandon Higgs <higgsb@medimmune.com>
 Maintainer: Todd Creasy <creasyt@medimmune.com>, Wei Zhu <weizhu365@gmail.com>
 Description: CNV analysis in groups of tumor samples (Publication Pending).
 License: LGPL (>= 3)
-Imports: BiocGenerics (>= 0.7.5), BiocStyle, Biobase, ggplot2, WriteXLS, gtools, 
-        RColorBrewer, limma, scales, rgl, grid, gtable, gridExtra, 
-        biovizBase, rainbow, e1071
-Depends: R (>= 3.2.1), IRanges, GenomicRanges, plyr, dplyr, magrittr
-Suggests: methods, knitr, rmarkdown
+Imports:
+    BiocGenerics (>= 0.7.5),
+    BiocStyle,
+    Biobase,
+    ggplot2,
+    WriteXLS,
+    gtools,
+    RColorBrewer,
+    limma,
+    scales,
+    rgl,
+    grid,
+    gtable,
+    gridExtra,
+    biovizBase,
+    rainbow,
+    e1071
+Depends:
+    R (>= 3.2.1),
+    IRanges,
+    GenomicRanges,
+    plyr,
+    dplyr,
+    magrittr
+Suggests:
+    methods,
+    knitr,
+    rmarkdown
 biocViews: CopyNumberVariation, Software, Sequencing, Coverage
 Packaged: 2015-05-02 06:08:00 UTC; biocbuild
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

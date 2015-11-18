@@ -4,6 +4,8 @@
 #' @name RBD
 #' @examples 
 #' rbd <- new("RBD")
+utils::globalVariables(c("num.mark", "freq", "cnv.start", "cnv.end", 
+                         "seg.mean", "."))
 
 RBD <- setClass(
     "RBD",
