@@ -36,7 +36,7 @@ Mapped reads from tumor and normal tissue can be processed with mutation caller 
 
 The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
 
-Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as follows.
+Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as shown below.
 
 ```{r}
 suppressMessages(
@@ -49,6 +49,19 @@ allCall.lst is pre-calculated CNV data. allRBD.lst is simply the RBD data from b
 ```{r}
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 head(allCall.lst[[1]]@rbd)
+```
+
+However, if you wish to create your own RBD object from your input, you would use the code below. There is test data available in this package that is used for demonstration purposes.
+
+```{r}
+load(system.file("data", "cnv.test.gr", package="BubbleTree"))
+load(system.file("data", "snv.test.gr", package="BubbleTree"))
+
+# initialize RBD object
+r <- new("RBD", unimodal.kurtosis=-0.1)
+
+# create new RBD object with GenomicRanges objects for SNPs and CNVs
+rbd <- makeRBD(r, snp.gr, cnv.gr)
 ```
 
 The remaining datasets used to support the CNV data display on the BubbleTree plots.

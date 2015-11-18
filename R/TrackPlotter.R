@@ -470,14 +470,16 @@ setMethod("RscoreTrack",
               if(!is.null(cnv.gr)){
                   cnv.gr <- cnv.gr %>% keep24chr(no.sex.chr=TRUE) %>% 
                             transformToGenome(space.skip=0.01) %>% mold
-                  p0 <- p0 + geom_segment(data=cnv.gr, 
-                                          aes(x=.start, 
-                                              xend=.end, 
-                                              y=2^score, 
-                                              yend=2^score), 
-                                          inherit.aes=FALSE, 
-                                          size=3, 
-                                          col=cols[1], alpha=1, na.rm=TRUE)
+                  p0 <- p0 + geom_segment(data=cnv.gr,
+                                          aes(x=.start,
+                                              xend=.end,
+                                              y=2^score,
+                                              yend=2^score),
+                                          inherit.aes=FALSE,
+                                          size=3,
+                                          col=cols[1],
+                                          alpha=1,
+                                          na.rm=TRUE)
               }
 
               p1 <- p0 +  geom_segment(data=my.dat,
@@ -525,9 +527,9 @@ setMethod("RscoreTrack",
 dat2gr <- function(dat) {
     dat$width <- NULL
     gr <- with(dat, GRanges(seqnames, IRanges(start, end), strand=strand))
-    elementMetadata(gr) <- dat[, ! names(dat) %in% c("seqnames", 
-                                                     "start", 
-                                                     "end", 
+    elementMetadata(gr) <- dat[, ! names(dat) %in% c("seqnames",
+                                                     "start",
+                                                     "end",
                                                      "strand")]
     return(gr)
 }

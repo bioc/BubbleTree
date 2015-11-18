@@ -8,8 +8,6 @@ utils::globalVariables(c("seg.size", "seg.id", "x", "y", "hds", "lrr", "R",
                          "HDS", "Genotype", "symbol.col", "cls", ".p.dif", 
                          "deviation", "prev", "."))
 
-setClass("RBD", contains=c("GRanges"))
-
 BTreePredictor <- setClass(
     "BTreePredictor",
 
@@ -29,7 +27,7 @@ setMethod("initialize",
           function(.Object, config=NULL, rbd=NULL, rbd.adj=NULL, result=NULL,
                    max.ploidy=6, prev.grid=seq(0.2,1, by=0.01)) {
 
-              if(is.null(config)){
+              if(is.null(config)) {
                   config <- list()
                   config$xypGrid = expand.grid(x=0:floor(max.ploidy/2),
                                                y=0:max.ploidy,

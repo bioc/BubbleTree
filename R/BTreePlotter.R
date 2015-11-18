@@ -37,12 +37,12 @@ setMethod("initialize",
                   hcl(h=hues, l=65, c=100)[1:n]
               }
 
-              if(is.null(seq.col)){
+              if(is.null(seq.col)) {
                   seq.col <- rainbow(22)
                   names(seq.col) <- paste0("chr", 1:22)
               }
 
-              if(is.null(branch.col)){
+              if(is.null(branch.col)) {
                   branch.col <- gg_color_hue(max.ploidy+1)
                   names(branch.col) <- 0:max.ploidy
               }else{

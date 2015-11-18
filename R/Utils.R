@@ -39,5 +39,3 @@ btcompare <- function(set1, set2) {
 
     return(list(comm=comm, uniq.1=uniq.1, uniq.2=uniq.2))
 }
-
-

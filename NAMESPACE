@@ -13,6 +13,7 @@ export("TrackPlotter", bafTrack)
 export("TrackPlotter", heteroLociTrack)
 export("TrackPlotter", RscoreTrack)
 export("TrackPlotter", getTracks)
+export("RBD", makeRBD)
 export(saveXLS)
 export(btcompare)
 
