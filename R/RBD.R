@@ -18,7 +18,7 @@ RBD <- setClass(
 
 setMethod("initialize",
           "RBD",
-          function(.Object, unimodal.kurtosis=-0.1) {
+          function(.Object, unimodal.kurtosis=-0.1, ...) {
               .Object@unimodal.kurtosis <- unimodal.kurtosis
               .Object
           }
@@ -29,7 +29,7 @@ setMethod("initialize",
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
            def=function(.Object, unimodal.kurtosis=-0.1, 
-                        snp.gr=NULL, cnv.gr=NULL) {
+                        snp=NULL, cnv=NULL, ...) {
                standardGeneric("makeRBD")
            }
 )
@@ -47,7 +47,7 @@ setGeneric(name="makeRBD",
 setMethod("makeRBD",
           "RBD",
           function(.Object, unimodal.kurtosis=-0.1, 
-                   snp.gr=snp.gr, cnv.gr=cnv.gr) {
+                   snp.gr=NULL, cnv.gr=NULL) {
               
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               

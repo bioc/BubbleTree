@@ -6,10 +6,10 @@
 \alias{makeRBD,RBD-method}
 \title{makeRBD}
 \usage{
-makeRBD(.Object, unimodal.kurtosis = -0.1, snp.gr = NULL, cnv.gr = NULL)
+makeRBD(.Object, unimodal.kurtosis = -0.1, snp = NULL, cnv = NULL, ...)
 
-\S4method{makeRBD}{RBD}(.Object, unimodal.kurtosis = -0.1, snp.gr = snp.gr,
-  cnv.gr = cnv.gr)
+\S4method{makeRBD}{RBD}(.Object, unimodal.kurtosis = -0.1, snp.gr = NULL,
+  cnv.gr = NULL)
 }
 \arguments{
 \item{.Object}{the object}
