@@ -6,15 +6,16 @@
 \alias{makeRBD,RBD-method}
 \title{makeRBD}
 \usage{
-makeRBD(.Object, unimodal.kurtosis = -0.1, snp = NULL, cnv = NULL, ...)
+makeRBD(.Object, unimodal.kurtosis = -0.1, ...)
 
-\S4method{makeRBD}{RBD}(.Object, unimodal.kurtosis = -0.1, snp.gr = NULL,
-  cnv.gr = NULL)
+\S4method{makeRBD}{RBD}(.Object, snp.gr, cnv.gr, unimodal.kurtosis = -0.1)
 }
 \arguments{
 \item{.Object}{the object}
 
 \item{unimodal.kurtosis}{kurtosis}
+
+\item{...}{other input (not needed)}
 
 \item{snp.gr}{SNP GenomicRanges object}
 

@@ -7,6 +7,8 @@
 utils::globalVariables(c("num.mark", "freq", "cnv.start", "cnv.end", 
                          "seg.mean", "."))
 
+setClass("GenomicRanges")
+
 RBD <- setClass(
     "RBD",
 
@@ -28,8 +30,7 @@ setMethod("initialize",
 #' @docType methods
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
-           def=function(.Object, unimodal.kurtosis=-0.1, 
-                        snp=NULL, cnv=NULL, ...) {
+           def=function(.Object, unimodal.kurtosis=-0.1, ...) {
                standardGeneric("makeRBD")
            }
 )
@@ -42,12 +43,12 @@ setGeneric(name="makeRBD",
 #' @param unimodal.kurtosis kurtosis
 #' @param snp.gr SNP GenomicRanges object
 #' @param cnv.gr CNV GenomicRanges object
+#' @param ... other input (not needed)
 #' @return RBD object
 #' @example examples/makeRBD-Ex.R
 setMethod("makeRBD",
           "RBD",
-          function(.Object, unimodal.kurtosis=-0.1, 
-                   snp.gr=NULL, cnv.gr=NULL) {
+          function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
               
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               
@@ -100,7 +101,7 @@ setMethod("makeRBD",
 #' @docType methods
 #' @rdname mergeSnpCnv
 setGeneric(name="mergeSnpCnv",
-           def=function(.Object, snp.gr=NULL, cnv.gr=NULL) {
+           def=function(.Object, snp.gr, cnv.gr) {
                standardGeneric("mergeSnpCnv")
            }
 )
@@ -116,7 +117,7 @@ setGeneric(name="mergeSnpCnv",
 setMethod("mergeSnpCnv",
           "RBD",
           function(.Object, snp.gr, cnv.gr) {
-              hits = findOverlaps(snp.gr, cnv.gr)
+              hits = GenomicRanges::findOverlaps(snp.gr, cnv.gr)
               hits.df = as.data.frame(hits)
               snp.df = as.data.frame(snp.gr)
               cnv.df = as.data.frame(cnv.gr)

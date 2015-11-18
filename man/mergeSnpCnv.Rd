@@ -6,9 +6,9 @@
 \alias{mergeSnpCnv,RBD-method}
 \title{mergeSnpCnv}
 \usage{
-mergeSnpCnv(.Object, snp.gr = NULL, cnv.gr = NULL)
+mergeSnpCnv(.Object, snp.gr, cnv.gr)
 
-\S4method{mergeSnpCnv}{RBD}(.Object, snp.gr = NULL, cnv.gr = NULL)
+\S4method{mergeSnpCnv}{RBD}(.Object, snp.gr, cnv.gr)
 }
 \arguments{
 \item{.Object}{the object}
