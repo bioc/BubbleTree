@@ -9,9 +9,6 @@ utils::globalVariables(c("p", "x", "y", "chrom", "chromStart", "chromEnd",
                          "y.adj", "brewer.pal", "metadata", "seqlevels<-", 
                          "mutate"))
 
-
-
-
 gr2 <- setClass("GenomicRanges")
 
 TrackPlotter <- setClass(
