@@ -7,24 +7,20 @@
 utils::globalVariables(c("num.mark", "freq", "cnv.start", "cnv.end", 
                          "seg.mean", "."))
 
+gr <- setClass("GenomicRanges")
+
 RBD <- setClass(
     "RBD",
 
-    representation(snp.gr="data.frame",
-                   cnv.gr="data.frame",
-                   unimodal.kurtosis="numeric"),
+    representation(unimodal.kurtosis="numeric"),
     
-    prototype(snp.gr=NULL,
-              cnv.gr=NULL,
-              unimodal.kurtosis=-0.1)
+    prototype(unimodal.kurtosis=-0.1)
 
 )
 
 setMethod("initialize",
           "RBD",
-          function(.Object, snp.gr=NULL, cnv.gr=NULL, unimodal.kurtosis=-0.1) {
-              .Object@snp.gr <- NULL
-              .Object@cnv.gr <- NULL
+          function(.Object, unimodal.kurtosis=-0.1) {
               .Object@unimodal.kurtosis <- unimodal.kurtosis
               .Object
           }
@@ -34,7 +30,7 @@ setMethod("initialize",
 #' @docType methods
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
-           def=function(.Object, snp.gr=NULL, cnv.gr=NULL, unimodal.kurtosis=-0.1) {
+           def=function(.Object, unimodal.kurtosis=-0.1, ...) {
                standardGeneric("makeRBD")
            }
 )
@@ -43,13 +39,15 @@ setGeneric(name="makeRBD",
 #' @description make the RBD object
 #' @rdname makeRBD
 #' @aliases makeRBD
+#' @param .Object the object
+#' @param unimodal.kurtosis kurtosis
 #' @param snp.gr SNP GenomicRanges object
 #' @param cnv.gr CNV GenomicRanges object
 #' @return RBD object
 #' @example examples/makeRBD-Ex.R
 setMethod("makeRBD",
           "RBD",
-          function(.Object, snp.gr=snp.gr, cnv.gr=cnv.gr, unimodal.kurtosis=-0.1) {
+          function(.Object, unimodal.kurtosis=-0.1, snp.gr=snp.gr, cnv.gr=cnv.gr) {
               
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               
@@ -102,6 +100,7 @@ setGeneric(name="mergeSnpCnv",
 #' @description merge snp and cnv data
 #' @rdname mergeSnpCnv
 #' @aliases mergeSnpCnv
+#' @param .Object the object
 #' @param snp.gr SNP GenomicRanges object
 #' @param cnv.gr CNV GenomicRanges object
 #' @return combined, unique list of genes

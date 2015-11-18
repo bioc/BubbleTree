@@ -11,6 +11,8 @@ mergeSnpCnv(.Object, snp.gr = NULL, cnv.gr = NULL)
 \S4method{mergeSnpCnv}{RBD}(.Object, snp.gr = NULL, cnv.gr = NULL)
 }
 \arguments{
+\item{.Object}{the object}
+
 \item{snp.gr}{SNP GenomicRanges object}
 
 \item{cnv.gr}{CNV GenomicRanges object}
