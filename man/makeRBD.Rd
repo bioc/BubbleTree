@@ -27,8 +27,9 @@ RBD object
 make the RBD object
 }
 \examples{
-load(system.file("extdata", "cnv.test.gr", package="BubbleTree"))
-load(system.file("extdata", "snv.test.gr", package="BubbleTree"))
+
+load(system.file("data", "cnv.gr.rda", package="BubbleTree"))
+load(system.file("data", "snp.gr.rda", package="BubbleTree"))
 
 # initialize RBD object
 r <- new("RBD", unimodal.kurtosis=-0.1)
