@@ -1,8 +1,4 @@
 
-suppressMessages(
-    library(BubbleTree)
-)
-
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 load(system.file("data", "centromere.dat.rda", package="BubbleTree"))
 load(system.file("data", "all.somatic.lst.RData", package="BubbleTree"))
