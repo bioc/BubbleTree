@@ -16,6 +16,9 @@ info(.Object)
 \value{
 print out info of prediction data
 }
+\description{
+info
+}
 \examples{
 
 load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))

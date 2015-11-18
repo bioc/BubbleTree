@@ -16,6 +16,9 @@ getTracks(p1, p2, title = "")
 \value{
 all of the requested tracks
 }
+\description{
+get all tracks
+}
 \examples{
 
 suppressMessages(

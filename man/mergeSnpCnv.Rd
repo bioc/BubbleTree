@@ -18,4 +18,7 @@ mergeSnpCnv(.Object, snp.gr = NULL, cnv.gr = NULL)
 \value{
 combined, unique list of genes
 }
+\description{
+merge snp and cnv data
+}
 

@@ -20,6 +20,9 @@ drawBubbles(.Object, rbd, col = NULL)
 \value{
 draw the bubbles on the track
 }
+\description{
+draw the Bubbles
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

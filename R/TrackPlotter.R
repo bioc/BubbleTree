@@ -37,6 +37,7 @@ setGeneric(name="xyTrack",
 )
 
 #' @title xyTrack
+#' @description get the xy track
 #' @rdname xyTrack
 #' @aliases xyTrack
 #' @param .Object the object
@@ -148,6 +149,7 @@ setGeneric(name="bafTrack",
 )
 
 #' @title bafTrack
+#' @description get the BAF track
 #' @rdname bafTrack
 #' @aliases bafTrack
 #' @param .Object the object
@@ -282,6 +284,7 @@ setGeneric(name="heteroLociTrack",
 )
 
 #' @title heteroLociTrack
+#' @description get the heteroLoci track
 #' @rdname heteroLociTrack
 #' @aliases heteroLociTrack
 #' @param .Object the object
@@ -411,6 +414,7 @@ setGeneric(name="RscoreTrack",
 )
 
 #' @title RscoreTrack
+#' @description get the RScore track
 #' @rdname RscoreTrack
 #' @aliases RscoreTrack
 #' @param .Object the object
@@ -551,6 +555,7 @@ keep24chr <- function(gr, no.sex.chr=TRUE, is.female=FALSE) {
 }
 
 #' @title getTracks
+#' @description get all tracks
 #' @rdname getTracks
 #' @aliases getTracks
 #' @param p1 set 1

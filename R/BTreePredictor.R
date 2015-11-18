@@ -74,6 +74,7 @@ setGeneric(name="loadRBD",
 )
 
 #' @title loadRBD
+#' @description load the RBD data
 #' @rdname loadRBD
 #' @aliases loadRBD
 #' @param .Object the object
@@ -110,6 +111,7 @@ setGeneric(name="btpredict",
 )
 
 #' @title btpredict
+#' @description btpredict
 #' @rdname btpredict
 #' @aliases btpredict
 #' @param .Object the object
@@ -501,6 +503,7 @@ setGeneric(name="info",
 )
 
 #' @title info
+#' @description info
 #' @rdname info
 #' @aliases info
 #' @param .Object the object

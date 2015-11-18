@@ -1,5 +1,6 @@
 
 #' @title saveXLS
+#' @description saveXLS
 #' @rdname saveXLS
 #' @aliases saveXLS
 #' @param dat.lst dataframe
@@ -22,6 +23,7 @@ saveXLS <- function(dat.lst, xls.fn, row.names=FALSE, ...) {
 }
 
 #' @title btcompare
+#' @description btcompare
 #' @rdname btcompare
 #' @aliases btcompare
 #' @param set1 first set

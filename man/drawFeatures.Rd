@@ -20,6 +20,9 @@ drawFeatures(.Object, rbd, col = NULL)
 \value{
 draw the annotation on the track
 }
+\description{
+draw the features
+}
 \examples{
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
 load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree"))

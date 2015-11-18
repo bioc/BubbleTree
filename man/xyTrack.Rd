@@ -25,6 +25,9 @@ xyTrack(.Object, result.dat, gr2, min.prev = 0.15, ymax = 4.3)
 \value{
 the highlighted xy track
 }
+\description{
+get the xy track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

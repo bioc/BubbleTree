@@ -30,6 +30,9 @@ heteroLociTrack(.Object, result.dat, gr2, hetero.gr = NULL, min.prev = 0.15,
 \value{
 the highlightted heterozygosity track
 }
+\description{
+get the heteroLoci track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

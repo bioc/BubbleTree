@@ -30,6 +30,9 @@ RscoreTrack(.Object, result.dat, gr2, cnv.gr = NULL, min.prev = 0.15,
 \value{
 the highlighted RScore track
 }
+\description{
+get the RScore track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

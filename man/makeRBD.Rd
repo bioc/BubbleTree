@@ -19,6 +19,9 @@ makeRBD(.Object, snp.gr = NULL, cnv.gr = NULL, unimodal.kurtosis = -0.1)
 \value{
 RBD object
 }
+\description{
+make the RBD object
+}
 \examples{
 load(system.file("extdata", "cnv.test.gr", package="BubbleTree"))
 load(system.file("extdata", "snv.test.gr", package="BubbleTree"))

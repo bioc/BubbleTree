@@ -14,6 +14,9 @@ btcompare(set1, set2)
 \value{
 combined, unique list of genes
 }
+\description{
+btcompare
+}
 \examples{
 
 load(system.file("data", "cancer.genes.minus2.rda", package="BubbleTree"))

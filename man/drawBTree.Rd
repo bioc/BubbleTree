@@ -20,6 +20,9 @@ drawBTree(.Object, rbd, size = 1)
 \value{
 draw the BTree track
 }
+\description{
+draw the BTree track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

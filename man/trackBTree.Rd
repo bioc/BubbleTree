@@ -30,6 +30,9 @@ trackBTree(.Object, rbd1, rbd2, is.matched = FALSE, min.srcSize = 0.5,
 \value{
 geom_segment location of BTree track
 }
+\description{
+get the geom_segment location of the BTree track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

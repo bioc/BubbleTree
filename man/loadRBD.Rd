@@ -20,6 +20,9 @@ loadRBD(.Object, rbd, total.mark = NA)
 \value{
 .Object populated with the RBD list with updated segment size
 }
+\description{
+load the RBD data
+}
 \examples{
 
 load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))

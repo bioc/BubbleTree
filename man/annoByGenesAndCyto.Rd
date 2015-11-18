@@ -30,6 +30,9 @@ annoByGenesAndCyto(.Object, chr, beg, end, critical.genes, gene.uni.clean.gr,
 \value{
 list of annotation for genes and cytobands
 }
+\description{
+get annotation for genes and cytobands
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

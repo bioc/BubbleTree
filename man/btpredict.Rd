@@ -16,6 +16,9 @@ btpredict(.Object)
 \value{
 .Object populated with the predictions
 }
+\description{
+btpredict
+}
 \examples{
 
 load(system.file("data", "allRBD.lst.RData", package="BubbleTree"))

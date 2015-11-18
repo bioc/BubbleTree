@@ -40,6 +40,7 @@ setGeneric(name="makeRBD",
 )
 
 #' @title makeRBD
+#' @description make the RBD object
 #' @rdname makeRBD
 #' @aliases makeRBD
 #' @param snp.gr SNP GenomicRanges object
@@ -98,12 +99,12 @@ setGeneric(name="mergeSnpCnv",
 )
 
 #' @title mergeSnpCnv
+#' @description merge snp and cnv data
 #' @rdname mergeSnpCnv
 #' @aliases mergeSnpCnv
 #' @param snp.gr SNP GenomicRanges object
 #' @param cnv.gr CNV GenomicRanges object
 #' @return combined, unique list of genes
-
 setMethod("mergeSnpCnv",
           "RBD",
           function(.Object, snp.gr, cnv.gr) {

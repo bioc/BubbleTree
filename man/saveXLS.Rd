@@ -18,6 +18,9 @@ saveXLS(dat.lst, xls.fn, row.names = FALSE, ...)
 \value{
 new Excel file
 }
+\description{
+saveXLS
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))

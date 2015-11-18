@@ -145,6 +145,7 @@ setGeneric(name="trackBTree",
 )
 
 #' @title trackBTree
+#' @description get the geom_segment location of the BTree track
 #' @rdname trackBTree
 #' @aliases trackBTree
 #' @param .Object the object
@@ -226,6 +227,7 @@ setGeneric(name="drawBTree",
 )
 
 #' @title drawBTree
+#' @description draw the BTree track
 #' @rdname drawBTree
 #' @aliases drawBTree
 #' @param .Object the object
@@ -286,6 +288,7 @@ setGeneric(name="drawBubbles",
 )
 
 #' @title drawBubbles
+#' @description draw the Bubbles
 #' @rdname drawBubbles
 #' @aliases drawBubbles
 #' @param .Object the object
@@ -349,6 +352,7 @@ setGeneric(name="drawFeatures",
 )
 
 #' @title drawFeatures
+#' @description draw the features
 #' @rdname drawFeatures
 #' @aliases drawFeatures
 #' @param .Object the object

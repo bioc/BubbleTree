@@ -46,6 +46,7 @@ setGeneric(name="annoByGenesAndCyto",
 )
 
 #' @title annoByGenesAndCyto
+#' @description get annotation for genes and cytobands
 #' @rdname annoByGenesAndCyto
 #' @aliases annoByGenesAndCyto
 #' @param .Object the objet

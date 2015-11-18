@@ -28,6 +28,9 @@ bafTrack(.Object, result.dat, gr2, somatic.gr = NULL, min.prev = 0.15,
 \value{
 the highlighted BAF track
 }
+\description{
+get the BAF track
+}
 \examples{
 
 load(system.file("data", "allCall.lst.RData", package="BubbleTree"))
