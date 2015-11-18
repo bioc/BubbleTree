@@ -33,6 +33,7 @@ import("magrittr")
 import("RColorBrewer")
 import("rgl")
 import("BiocStyle")
+import("e1071")
 
 importFrom("plyr", l_ply)
 importFrom("plyr", llply)
@@ -50,4 +51,3 @@ importFrom("dplyr", summarise)
 
 importFrom("gtools", mixedorder)
 importFrom("limma", weighted.median)
-

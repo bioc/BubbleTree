@@ -8,18 +8,14 @@
 RBD <- setClass(
     "RBD",
     
-    representation(snp.gr="gr",
-                   cnv.gr="gr",
-                   unimodal.kurtosis="numeric"),
+    representation(unimodal.kurtosis="numeric"),
     
-    prototype = list(snp.gr=NULL,
-                     cnv.gr=NULL,
-                     unimodal.kurtosis=-0.1)
+    prototype = list(unimodal.kurtosis=-0.1)
 )
 
 setMethod("initialize",
           "RBD",
-          function(.Object, snp.gr=NULL, cnv.gr=NULL, unimodal.kurtosis=-0.1) {
+          function(.Object, unimodal.kurtosis=-0.1) {
               .Object@unimodal.kurtosis <- unimodal.kurtosis
               .Object
           }
@@ -29,8 +25,7 @@ setMethod("initialize",
 #' @docType methods
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
-           def=function(.Object, snp.gr=NULL, 
-                        cnv.gr=NULL, unimodal.kurtosis=-0.1) {
+           def=function(.Object, unimodal.kurtosis=-0.1) {
                standardGeneric("makeRBD")
            }
 )
@@ -43,9 +38,9 @@ setGeneric(name="makeRBD",
 #' @return RBD object
 #' @example examples/makeRBD-Ex.R
 makeRBD <- function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
-
-    cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
     
+    cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
+
     cs1 <- cs %>% filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
         group_by(seg.id, seqnames, cnv.start, cnv.end, num.mark, seg.mean) %>% 
         dplyr::summarise(kurtosis=e1071::kurtosis(freq, type=1),
@@ -57,7 +52,7 @@ makeRBD <- function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
         plyr::rename(c("cnv.start"="start",
                        cnv.end="end",
                        seg.mean="lrr")) %>% as.data.frame
-    
+
     # add those segment with low lrr < -1.25
     ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], cs1$seg.id)
     
@@ -74,12 +69,12 @@ makeRBD <- function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
         cs1 <- rbind(cs1, cs2)
     }
     
-    object <- with(cs1, GRanges(seqnames, IRanges(start, end)))
+    rbd <- with(cs1, GRanges(seqnames, IRanges(start, end)))
     
-    elementMetadata(object) <- cs1[, ! names(cs1) %in% c("seqnames",
+    elementMetadata(rbd) <- cs1[, ! names(cs1) %in% c("seqnames",
                                                          "start",
                                                          "end")]
-    return(new("RBD", object))
+    return(rbd)
 }
 
 #' @docType methods
@@ -105,9 +100,6 @@ mergeSnpCnv <- function(.Object, snp.gr, cnv.gr) {
     colnames(cnv.df) = gsub("start", "cnv.start", colnames(cnv.df))
     colnames(cnv.df) = gsub("end", "cnv.end", colnames(cnv.df))
     cnv.df$seg.id = 1:nrow(cnv.df)
-
-    print(cnv.df[1:5,])
-    quit()
     
     out = cbind(snp.df[hits.df$queryHits,],
                 cnv.df[hits.df$subjectHits,c("num.mark",

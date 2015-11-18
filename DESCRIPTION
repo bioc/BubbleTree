@@ -28,7 +28,7 @@ Description: CNV analysis in groups of tumor samples (Publication Pending).
 License: LGPL (>= 3)
 Imports: BiocGenerics (>= 0.7.5), BiocStyle, Biobase, ggplot2, WriteXLS, gtools, 
         RColorBrewer, limma, scales, rgl, grid, gtable, gridExtra, 
-        biovizBase, rainbow
+        biovizBase, rainbow, e1071
 Depends: R (>= 3.2.1), IRanges, GenomicRanges, plyr, dplyr, magrittr
 Suggests: methods, knitr, rmarkdown
 biocViews: CopyNumberVariation, Software, Sequencing, Coverage
