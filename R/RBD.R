@@ -7,8 +7,6 @@
 utils::globalVariables(c("num.mark", "freq", "cnv.start", "cnv.end", 
                          "seg.mean", "."))
 
-gr <- setClass("GenomicRanges")
-
 RBD <- setClass(
     "RBD",
 
@@ -30,7 +28,8 @@ setMethod("initialize",
 #' @docType methods
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
-           def=function(.Object, unimodal.kurtosis=-0.1, ...) {
+           def=function(.Object, unimodal.kurtosis=-0.1, 
+                        snp.gr=NULL, cnv.gr=NULL) {
                standardGeneric("makeRBD")
            }
 )
@@ -47,12 +46,19 @@ setGeneric(name="makeRBD",
 #' @example examples/makeRBD-Ex.R
 setMethod("makeRBD",
           "RBD",
-          function(.Object, unimodal.kurtosis=-0.1, snp.gr=snp.gr, cnv.gr=cnv.gr) {
+          function(.Object, unimodal.kurtosis=-0.1, 
+                   snp.gr=snp.gr, cnv.gr=cnv.gr) {
               
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               
-              cs1 <- cs %>% filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
-                  group_by(seg.id, seqnames, cnv.start, cnv.end, num.mark, seg.mean) %>% 
+              cs1 <- cs %>% 
+                  filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
+                  group_by(seg.id,
+                           seqnames,
+                           cnv.start,
+                           cnv.end,
+                           num.mark,
+                           seg.mean) %>% 
                   dplyr::summarise(kurtosis=e1071::kurtosis(freq, type=1),
                                    hds = ifelse(kurtosis >= unimodal.kurtosis,
                                                 abs(median(freq, na.rm=T)-0.5),
@@ -64,7 +70,8 @@ setMethod("makeRBD",
                                  seg.mean="lrr")) %>% as.data.frame
               
               # add those segment with low lrr < -1.25
-              ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], cs1$seg.id)
+              ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], 
+                             cs1$seg.id)
               
               if(length(ids) >0) {
                   cs2 <- cnv.gr %>% 

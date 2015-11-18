@@ -6,7 +6,7 @@
 \alias{makeRBD,RBD-method}
 \title{makeRBD}
 \usage{
-makeRBD(.Object, unimodal.kurtosis = -0.1, ...)
+makeRBD(.Object, unimodal.kurtosis = -0.1, snp.gr = NULL, cnv.gr = NULL)
 
 \S4method{makeRBD}{RBD}(.Object, unimodal.kurtosis = -0.1, snp.gr = snp.gr,
   cnv.gr = cnv.gr)
