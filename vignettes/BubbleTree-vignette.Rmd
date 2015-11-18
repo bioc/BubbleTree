@@ -54,8 +54,8 @@ head(allCall.lst[[1]]@rbd)
 However, if you wish to create your own RBD object from your input, you would use the code below. There is test data available in this package that is used for demonstration purposes.
 
 ```{r}
-load(system.file("data", "cnv.test.gr", package="BubbleTree"))
-load(system.file("data", "snv.test.gr", package="BubbleTree"))
+load(system.file("inst/extdata", "cnv.test.gr", package="BubbleTree"))
+load(system.file("inst/extdata", "snv.test.gr", package="BubbleTree"))
 
 # initialize RBD object
 r <- new("RBD", unimodal.kurtosis=-0.1)
