@@ -37,6 +37,7 @@ Imports:
     limma,
     scales,
     rgl,
+    grid,
     gtable,
     gridExtra,
     biovizBase,
