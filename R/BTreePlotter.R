@@ -241,12 +241,14 @@ setMethod("drawBTree",
               zoom.size <- max(5*size, 
                                .Object@max.size/ max(rbd$seg.size, na.rm=TRUE), 
                                na.rm=TRUE)
+            
               dat <- as.data.frame(rbd) %>% 
                   filter(!is.na(hds)) %>% 
                   mutate(bubble.size = pmin(seg.size * zoom.size, 
                                             .Object@max.size))
-
+              
               ss <- subset(dat, 2^lrr >= .Object@max.ploidy/2 + 0.4)
+              
               if(nrow(ss)> 0){
                   warning("More ploidy might be suggested: ", 
                           paste(round(2^ss$lrr /2, 1), collapse=", "), "\n")
@@ -274,7 +276,8 @@ setMethod("drawBTree",
                   theme(legend.key = element_rect(fill=NA), 
                         legend.key.height=grid::unit(0.7,"line")) +
                   ggplot2::labs(fill="Chromosome")
-              btree
+              
+              return(btree)
           }
 )
 

@@ -49,7 +49,7 @@ setGeneric(name="makeRBD",
 setMethod("makeRBD",
           "RBD",
           function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
-              
+
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               
               cs1 <- cs %>% 
@@ -71,11 +71,11 @@ setMethod("makeRBD",
                   plyr::rename(c("cnv.start"="start",
                                  cnv.end="end",
                                  seg.mean="lrr")) %>% as.data.frame
-              
+
               # add those segment with low lrr < -1.25
               ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], 
                              cs1$seg.id)
-              
+
               if(length(ids) >0) {
                   cs2 <- cnv.gr %>% 
                       as.data.frame %>% 
@@ -90,11 +90,15 @@ setMethod("makeRBD",
               }
               
               rbd <- with(cs1, GRanges(seqnames, IRanges(start, end)))
-              
               elementMetadata(rbd) <- cs1[, ! names(cs1) %in% c("seqnames",
                                                                 "start",
                                                                 "end")]
-              return(rbd)
+
+              # calculate seg.size
+              total.mark <- sum(rbd$num.mark, na.rm=TRUE)
+              rbd$seg.size <- rbd$num.mark / total.mark * 100
+
+              return(as.data.frame(rbd))
           }
 )
 
@@ -121,17 +125,18 @@ setMethod("mergeSnpCnv",
               hits.df = as.data.frame(hits)
               snp.df = as.data.frame(snp.gr)
               cnv.df = as.data.frame(cnv.gr)
-              
+
               colnames(cnv.df) = gsub("start", "cnv.start", colnames(cnv.df))
               colnames(cnv.df) = gsub("end", "cnv.end", colnames(cnv.df))
               cnv.df$seg.id = 1:nrow(cnv.df)
-              
+
               out = cbind(snp.df[hits.df$queryHits,],
                           cnv.df[hits.df$subjectHits,c("num.mark",
                                                        "seg.mean",
                                                        "seg.id",
                                                        "cnv.start",
                                                        "cnv.end")])
+              
               return(out)
           }
 )
