@@ -57,7 +57,7 @@ setMethod("initialize",
               }
 
               .Object@config <- config
-              .Object@rbd <- data.frame()
+              .Object@rbd <- rbd
               .Object@rbd.adj <- data.frame()
               .Object@result <- list()
               .Object
@@ -121,20 +121,20 @@ setMethod("btpredict",
           "BTreePredictor",
           function(.Object){
               .Object <- getPloidyAdj(.Object)
-
+              
               # find the prevalences of the (sub)clones
               .Object <- findClones(.Object, useABB=FALSE)
-
+              
               if( is.na(.Object@config$high.ploidy)) {
                   .Object@config$high.ploidy = TRUE
               }
-
+              
               ###############################
               # Extra calculation for AABB
               ###############################
               round=1
               if(.Object@result$ploidy.adj["ploidy"] == 4 &
-                                        .Object@config$high.ploidy) {
+                 .Object@config$high.ploidy) {
                   # the tumor ploidy could be AABB or AAABBB, etc.
                   # if purity is less than 1/3, there is a chance of AAABBB
                   # or higher but we only consider AABB here
@@ -146,34 +146,39 @@ setMethod("btpredict",
                   }else{
                       new.adj <- 1/(1-max(p))
                       .Object@result$ploidy.adj["adj"] <- 
-                                    .Object@result$ploidy.adj["adj"] * new.adj
+                          .Object@result$ploidy.adj["adj"] * new.adj
                       .Object@rbd.adj$lrr <- .Object@rbd$lrr +
-                                        log2(.Object@result$ploidy.adj["adj"])
+                          log2(.Object@result$ploidy.adj["adj"])
                       round <- 2
                       .Object <- findClones(.Object, useABB=TRUE)
                   }
               }
-
+              
               ###############################
               # last, find the best match of all segments including
               # indistinguiable branches
               ###############################
               pp <- sort(.Object@result$prev, decreasing=TRUE)
-
+              
               if(.Object@result$ploidy.adj["ploidy"] == 3 &
-                        pp[1] < .Object@result$ploidy.adj["purity"] -
-                        .Object@config$cutree.h) {
+                 pp[1] < .Object@result$ploidy.adj["purity"] -
+                 .Object@config$cutree.h) {
                   pp <- c(.Object@result$ploidy.adj["purity"], pp)
               }
-
+              
               if(!is.na(pp[1]) & pp[1] > .Object@config$min.prev) {
                   # most sublones below 30% could be artifacts as
                   # hds is not be exactly
                   pp <- pp[pp> .Object@config$min.prev]
               }
               pred0 <- c(pp)
+              
+              predFit <- new("BTreePredictor", 
+                             rbd=.Object@rbd, 
+                             rbd.adj=.Object@rbd.adj, 
+                             prev.grid=pred0, 
+                             max.ploidy=10)
 
-              predFit <- new("BTreePredictor", prev.grid = pred0, max.ploidy=10)
               predFit@config$best.tol <- 0.02
               predFit@config$max.distL <- 999
               predFit@config$max.distR <- 999
@@ -227,6 +232,7 @@ setMethod("getPloidyAdj",
                                    limma::weighted.median(lrr,
                                                           seg.size,
                                                           na.rm=TRUE))
+
               if(abs(all.seg.mean) > 0.3){
                   # special abnormal case like 1500
                   central.segs <- subset(rbd, abs(lrr) < centralSegInterval)
@@ -239,15 +245,16 @@ setMethod("getPloidyAdj",
                                          abs(lrr - all.seg.mean) < 
                                                         centralSegInterval)
               }
+              
               uc.segs <- subset(central.segs, hds > uc.hds.cutoff)
 
               uc.cov <- sum(uc.segs$seg.size, na.rm=TRUE) /
                             sum(central.segs$seg.size, na.rm=TRUE)
-
+            
               low.hds <- with(rbd,
                               sum(seg.size[hds < lowHds.cutoff], na.rm=TRUE)) /
                               total.size
-
+              
               info <- c(upperCentral.cov = uc.cov, lowHDS.cov = low.hds)
 
               ploidy <- 2
