@@ -451,6 +451,5 @@ saveXLS(list(Summary=all.summary), xls.filename)
 
 # Citation
 
-<b>BubbleTree: an intuitive visualization to elucidate tumoral aneuploidy and clonality in somatic mosaicism using next generation sequencing data.</b> Wei Zhu, Michael Kuziora, Todd Creasy, Zhongwu Lai, Christopher Morehouse, Xiang Guo, Yinong Sebastian, Zheng Liu, Dong Shen, Jiaqi Huang, Feng Xue, Liyan Jiang, Yihong Yao, Brandon W. Higgs. Publication Pending (2015)
-
+Zhu W, Kuziora M, Creasy T, Lai Z, Morehouse C, Guo X, Sebastian Y, Shen D, Huang J, Dry JR, Xue F, Jiang L, Yao Y, Higgs BW (2015). "BubbleTree: an intuitive visualization to elucidate tumoral aneuploidy and clonality using next generation sequencing data." Nucleic Acids Research.
 
