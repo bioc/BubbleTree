@@ -36,7 +36,7 @@ Mapped reads from tumor and normal tissue can be processed with mutation caller 
 
 The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
 
-Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as shown below.
+Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as shown below. To utilize this vignette, you must first load BubbleTree below. You don't need to use "suppressMessages".
 
 ```{r}
 suppressMessages(
@@ -135,12 +135,6 @@ print(btree)
 # print out purity and ploidy values
 info <- info(pred)
 cat("\nPurity/Ploidy: ", info, "\n")
-
-# plot a new BubbleTree plot
-btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
-btree <- drawBTree(btreeplotter, rbd)
-print(btree)
-
 ```
 
 The remaining datasets used to support the CNV data display on the BubbleTree plots.

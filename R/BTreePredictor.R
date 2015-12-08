@@ -57,9 +57,14 @@ setMethod("initialize",
               }
 
               .Object@config <- config
-              .Object@rbd <- rbd
+              .Object@rbd <- data.frame()
               .Object@rbd.adj <- data.frame()
               .Object@result <- list()
+              
+              if( !is.null(rbd) ) {
+                  .Object@rbd <- rbd
+              }
+              
               .Object
           }
 )
