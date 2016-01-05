@@ -85,7 +85,7 @@ setMethod("makeRBD",
                              lrr=seg.mean,
                              hds=NA,
                              hds.sd=NA,
-                             het.cnt=0)  %>% `[`(names(cs1))
+                             het.cnt=1)  %>% `[`(names(cs1))
                   cs1 <- rbind(cs1, cs2)
               }
               
