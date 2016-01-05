@@ -253,13 +253,13 @@ setMethod("drawBTree",
                   warning("More ploidy might be suggested: ", 
                           paste(round(2^ss$lrr /2, 1), collapse=", "), "\n")
               }
-
+              
               btree <- .Object@branches +
                   geom_point(data=dat,
                              aes(x=2^lrr, 
                                  y=hds, 
                                  cex=bubble.size, 
-                                 fill=seqnames, 
+                                 fill=factor(seqnames), 
                                  group=NULL),
                              col="gray50",
                              pch=21,
@@ -322,7 +322,7 @@ setMethod("drawBubbles",
                                         aes(x=2^lrr,
                                             y=hds,
                                             cex=bubble.size,
-                                            fill=seqnames,
+                                            fill=factor(seqnames),
                                             group=NULL),
                                         col=col,
                                         pch=21,
