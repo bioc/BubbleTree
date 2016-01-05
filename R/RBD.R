@@ -83,7 +83,7 @@ setMethod("makeRBD",
                       filter(seg.id %in% ids) %>% 
                       mutate(kurtosis = NA,
                              lrr=seg.mean,
-                             hds=0,
+                             hds=NA,
                              hds.sd=NA,
                              het.cnt=0)  %>% `[`(names(cs1))
                   cs1 <- rbind(cs1, cs2)
