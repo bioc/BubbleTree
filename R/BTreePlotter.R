@@ -106,7 +106,7 @@ setMethod("initialize",
                             adj=0,
                             parse=TRUE,
                             cex=5,
-                            face="bold",
+                            fontface="bold",
                             family="mono")
 
               # change theme
