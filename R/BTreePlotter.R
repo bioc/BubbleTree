@@ -21,7 +21,7 @@ BTreePlotter <- setClass(
                    max.size="numeric"),
 
     prototype = list(max.ploidy=6,
-                     seq.col=rainbow(22),
+                     seq.col=rainbow(25),
                      branch.col="",
                      branches=NULL,
                      max.size=20)
@@ -38,7 +38,7 @@ setMethod("initialize",
               }
 
               if(is.null(seq.col)) {
-                  seq.col <- rainbow(22)
+                  seq.col <- rainbow(25)
                   names(seq.col) <- paste0("chr", 1:22)
               }
 
@@ -77,7 +77,7 @@ setMethod("initialize",
                                                   "Others" ))) %>% 
                   filter(Genotype != "AB") %>% 
                   mutate(Genotype = ifelse(Genotype == "", "phi", Genotype))
-
+                
               branches.text <- subset(branches, p ==1 ) %>% 
                   mutate(R= ifelse(Genotype == "phi", R, R+0.1), 
                          HDS = ifelse(Genotype == "phi", HDS+0.03, HDS))
@@ -86,19 +86,13 @@ setMethod("initialize",
 
               # border of the branch + geom_line(aes(cex=p*my.scale+1), alpha=1)
               b0 <- ggplot(branches,
-                           aes(x = R, 
-                               y=HDS, 
-                               group=Genotype, 
-                               col=factor(x+y), 
-                               fill=symbol.col)) +
-                  geom_line(aes(cex=p*my.scale+0.5),
-                            alpha=0.1) +
+                           aes(x=R, y=HDS, group=Genotype, col=factor(x+y), fill=symbol.col)) +
+                  geom_line(aes(cex=p*my.scale+0.5), alpha=0.1) +
                   geom_point(aes(cex=my.scale*p+4),
                              pch=15, colour = "white", na.rm=TRUE) +
                   geom_text(aes(cex=my.scale*p + 0.1,
                                 label=round(p*100),
-                                angle=ifelse(x!=y, 0, 90)),
-                            alpha=1) +
+                                angle=ifelse(x!=y, 0, 90)), alpha=1) +
                   geom_point(x=1, y=0, pch=16, size=5, 
                              col="gray50", na.rm=TRUE) +
                   geom_text(data=branches.text,
@@ -125,7 +119,8 @@ setMethod("initialize",
                   scale_color_manual(values = c(branch.col, seq.col))
 
               # change grid line
-              bplot <- b1 + scale_y_continuous(breaks = seq(0, 0.5, 0.05)) +
+              bplot <- b1 + 
+                  scale_y_continuous(breaks = seq(0, 0.5, 0.05)) +
                   scale_x_continuous(breaks = seq(0, max.ploidy/2, 0.5),
                                      limits=c(0, max.ploidy/2+ 0.4))
 
@@ -174,7 +169,13 @@ setMethod(f="trackBTree",
                   filter(src.seg.size>=min.srcSize & trt.seg.size>=min.trtSize)
 
               if(nrow(dat) == 0) return(NULL)
-
+            
+              # check if seq id is appended with "chr" (e.g. chr18)
+              check.seq <- length(i <- grep("chr", dat$src.seqnames[1]))
+              if(!check.seq) {
+                  dat$src.seqnames <- paste0("chr", dat$src.seqnames)
+              }
+            
               out <- geom_segment(data=dat,
                                   aes(x = 2^src.lrr,
                                       y=src.hds,
@@ -187,6 +188,7 @@ setMethod(f="trackBTree",
                                   alpha=0.5,
                                   arrow=arrow(length = unit(0.3, "cm")),
                                   na.rm=TRUE)
+
               return(out)
           }
 )
@@ -247,26 +249,29 @@ setMethod("drawBTree",
                   mutate(bubble.size = pmin(seg.size * zoom.size, 
                                             .Object@max.size))
               
+              # check if seq id is appended with "chr" (e.g. chr18)
+              check.seq <- length(i <- grep("chr", dat$seqnames[1]))
+              if(!check.seq) {
+                  dat$seqnames <- paste0("chr", dat$seqnames)
+              }
+
               ss <- subset(dat, 2^lrr >= .Object@max.ploidy/2 + 0.4)
-              
               if(nrow(ss)> 0){
                   warning("More ploidy might be suggested: ", 
                           paste(round(2^ss$lrr /2, 1), collapse=", "), "\n")
               }
               
               btree <- .Object@branches +
-                  geom_point(data=dat,
-                             aes(x=2^lrr, 
-                                 y=hds, 
-                                 cex=bubble.size, 
-                                 fill=factor(seqnames), 
-                                 group=NULL),
-                             col="gray50",
-                             pch=21,
-                             alpha=0.7,
-                             na.rm=TRUE) +
+                  geom_point(
+                      data=dat,
+                      aes(x=2^lrr, y=hds, cex=bubble.size, group=NULL, fill=seqnames),
+                      col="gray50", 
+                      pch=21, 
+                      alpha=0.7,
+                      na.rm=TRUE
+                  ) + 
                   guides(size=FALSE, color=FALSE)
-
+            
               # add the chr legend
               btree <- btree +
                   guides(fill = guide_legend(override.aes=list(shape = 21,
@@ -276,7 +281,6 @@ setMethod("drawBTree",
                   theme(legend.key = element_rect(fill=NA), 
                         legend.key.height=grid::unit(0.7,"line")) +
                   ggplot2::labs(fill="Chromosome")
-              
               return(btree)
           }
 )
@@ -372,7 +376,7 @@ setMethod("drawFeatures",
               features <- geom_point(data=dat,
                                      aes(x=(2^lrr) + .15,
                                          y=hds, 
-                                         cex=15, 
+                                         cex=8, 
                                          group=NULL),
                                      col="black",
                                      fill=col,
