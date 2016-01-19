@@ -17,18 +17,16 @@ export("RBD", makeRBD)
 export(saveXLS)
 export(btcompare)
 
+import("ggplot2")
 import("biovizBase")
 import("Biobase")
-import("BiocGenerics")
-import("ggplot2")
+importFrom("grid", unit.pmax)
+import("gridExtra")
 import("gtable")
 import("rainbow")
-import("scales")
 import("WriteXLS")
 import("IRanges")
 import("GenomicRanges")
-import("grid")
-import("gridExtra")
 import("magrittr")
 import("RColorBrewer")
 import("rgl")
@@ -51,3 +49,84 @@ importFrom("dplyr", summarise)
 
 importFrom("gtools", mixedorder)
 importFrom("limma", weighted.median)
+
+# NAMESPACE conflict with ggplot2 2.0 "Position" function
+# Must import all BiocGenerics functions manually to suppress warning
+importFrom("BiocGenerics",
+    clusterCall, clusterApply, clusterApplyLB, clusterEvalQ, 
+    clusterExport, clusterMap, clusterSplit,
+    parLapply, parSapply, parApply, parRapply, 
+    parCapply, parLapplyLB, parSapplyLB,
+    combine,
+    updateObject,
+    counts, "counts<-",
+    design, "design<-",
+    dispTable, "dispTable<-",
+    sizeFactors, "sizeFactors<-",
+    conditions, "conditions<-",
+    estimateSizeFactors, 
+    estimateDispersions,
+    plotDispEsts,
+    plotMA,
+    plotPCA,
+    unstrand,
+    annotation, "annotation<-",
+    dbconn, dbfile,
+    fileName,
+    normalize,
+    organism, "organism<-",
+    species, "species<-",
+    score, "score<-",
+    strand, "strand<-",
+    updateObjectFromSlots,
+    getObjectSlots,
+    density,
+    IQR,
+    mad,
+    residuals,
+    weights,
+    xtabs,
+    relist,
+    boxplot,
+    image,
+
+    append,
+    as.data.frame,
+    as.list,
+    as.vector,
+    cbind, rbind,
+    do.call,
+    duplicated, anyDuplicated,
+    eval, evalq,
+    pmax, pmin, pmax.int, pmin.int,
+    Reduce, Filter, Find, Map, 
+    # Position, # NAMESPACE conflict with ggplot2 2.0
+    get, mget,
+    grep, grepl,
+    is.unsorted,
+    lapply, sapply,
+    lengths,
+    mapply,
+    match,
+    nrow, ncol, NROW, NCOL,
+    order,
+    paste,
+    rank,
+    rep.int,
+    rownames, "rownames<-", colnames, "colnames<-",
+    union, intersect, setdiff,
+    sort,
+    start, "start<-",
+    end, "end<-",
+    width, "width<-",
+    subset,
+    table,
+    tapply,
+    unique,
+    unlist,
+    unsplit
+    
+    
+)
+
+

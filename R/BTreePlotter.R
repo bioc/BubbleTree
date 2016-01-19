@@ -279,7 +279,7 @@ setMethod("drawBTree",
                                                                size=4,
                                                                col="black")) ) +
                   theme(legend.key = element_rect(fill=NA), 
-                        legend.key.height=grid::unit(0.7,"line")) +
+                        legend.key.height=unit(0.7,"line")) +
                   ggplot2::labs(fill="Chromosome")
               return(btree)
           }
