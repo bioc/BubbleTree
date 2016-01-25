@@ -35,7 +35,6 @@ Imports:
     gtools,
     RColorBrewer,
     limma,
-    rgl,
     grid,
     gtable,
     gridExtra,

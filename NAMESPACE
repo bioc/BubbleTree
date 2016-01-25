@@ -29,7 +29,6 @@ import("IRanges")
 import("GenomicRanges")
 import("magrittr")
 import("RColorBrewer")
-import("rgl")
 import("BiocStyle")
 import("e1071")
 
