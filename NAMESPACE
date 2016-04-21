@@ -1,5 +1,4 @@
 
-
 export("BTreePlotter", trackBTree)
 export("BTreePlotter", drawBTree)
 export("BTreePlotter", drawBubbles)
@@ -56,7 +55,6 @@ importFrom("BiocGenerics",
     clusterExport, clusterMap, clusterSplit,
     parLapply, parSapply, parApply, parRapply, 
     parCapply, parLapplyLB, parSapplyLB,
-    combine,
     updateObject,
     counts, "counts<-",
     design, "design<-",
@@ -88,7 +86,6 @@ importFrom("BiocGenerics",
     relist,
     boxplot,
     image,
-
     append,
     as.data.frame,
     as.list,
@@ -124,8 +121,6 @@ importFrom("BiocGenerics",
     unique,
     unlist,
     unsplit
-    
-    
 )
 
 

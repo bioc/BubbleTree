@@ -1,0 +1,2 @@
+options(rgl.useNULL = TRUE)
+

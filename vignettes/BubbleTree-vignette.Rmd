@@ -32,9 +32,77 @@ There are many methods for generating and processing sequencing data in preparat
 
 The primary BubbleTree requirement for sequence variant information is a `r Biocpkg("GRanges")` object containing the B alelle frequencies and genomic positions of variants known to be heterozygous in the paired normal sample.
 
-Mapped reads from tumor and normal tissue can be processed with mutation caller software such as VARSCAN or MUTECT. In this example, we use a hypothetical vcf file output which contains mutation calls from both normal and tumor samples.
+Mapped reads from tumor and normal tissue can be processed with mutation caller software such as VarScan or MUTECT. In this example, we use a hypothetical vcf file from VarScan output which contains mutation calls from both normal and tumor samples.
+
+
+### Preparing BAF Data From VarScan
+
+Assume that you have loaded the data snp.dat like this:
+
+```{rr}
+head(snp.dat)
+
+  CHROM    POS  ID REF ALT QUAL FILTER LT.rna.dp LN.rna.dp ON.rna.dp OT.rna.dp BT.wes.dp LT.wes.dp LN.wes.dp ON.wes.dp
+1  chr1  54757 rs202000650   T   G    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+2  chr1 564636           .   C   T    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+3  chr1 564862   rs1988726   T   C    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+4  chr1 564868   rs1832728   T   C    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+5  chr1 565454   rs7349151   T   C    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+6  chr1 565464   rs6594030   T   C    .   PASS        NA        NA        NA        NA        NA        NA        NA        NA
+  OT.wes.dp LT.wgs.dp LN.wgs.dp ON.wgs.dp OT.wgs.dp LT.rna.freq LN.rna.freq ON.rna.freq OT.rna.freq BT.wes.freq LT.wes.freq
+1        NA        25        24        27        19          NA          NA          NA          NA          NA          NA
+2        NA        21        NA        NA        14          NA          NA          NA          NA          NA          NA
+3        NA        10        15        55        13          NA          NA          NA          NA          NA          NA
+4        NA        10        12        60        14          NA          NA          NA          NA          NA          NA
+5        NA        21        14        26        24          NA          NA          NA          NA          NA          NA
+6        NA        25        16        33        29          NA          NA          NA          NA          NA          NA
+  LN.wes.freq ON.wes.freq OT.wes.freq LT.wgs.freq LN.wgs.freq ON.wgs.freq OT.wgs.freq
+1          NA          NA          NA      0.2400      0.1667      0.2222      0.3684
+2          NA          NA          NA      0.0000          NA          NA      0.1429
+3          NA          NA          NA      0.4000      0.5333      0.9091      0.7692
+4          NA          NA          NA      0.5000      0.6667      0.9333      0.7857
+5          NA          NA          NA      0.1429      0.3571      0.6538      0.6250
+6          NA          NA          NA      0.2000      0.3750      0.7273      0.5862
+
+```
+
+
+Identify the germline heterozygous loci:
+
+```{rr}
+is.hetero <- function(x, a=0.3, b=0.7) {
+ (x - a)  *  (b - x) >= 0
+}
+
+wgs.snp.ss <- subset(snp.dat, ! CHROM %in% c("chrX", "chrY") & 
+                         LN.wgs.dp >= 15 & 
+                         ON.wgs.dp >=15 & 
+                         is.hetero(LN.wgs.freq, 0.4, 0.6) & 
+                         is.hetero(ON.wgs.freq, 0.4, 0.6))
+```
+
+Then convert to the GRanges object:
+
+```{rr}
+library(GenomicRanges)
+min.num <- 10
+cnv.gr <- with(subset(seg$output, num.mark >= min.num & ! chrom %in% c("chrX", "chrY")) , 
+               GRanges(chrom, IRanges(loc.start, loc.end), mcols=cbind(num.mark, seg.mean)))
+```
 
 The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
+
+### Preparing CNV Data from DNAcopy
+
+The object seg is the segment call output from DNAcopy and min.num here specifies the minimum segment size to keep
+
+```{rr}
+library(GenomicRanges)
+min.num <- 10
+cnv.gr <- with(subset(seg$output, num.mark >= min.num & ! chrom %in% c("chrX", "chrY")) , GRanges(chrom, IRanges(loc.start, loc.end), mcols=cbind(num.mark, seg.mean)))
+```
+
+Then merge the SNP and CNV GRanges objects.
 
 Example data in the desired format is provided as part of this package as GRanges objects and can be loaded as shown below. To utilize this vignette, you must first load BubbleTree below. You don't need to use "suppressMessages".
 
