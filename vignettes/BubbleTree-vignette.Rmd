@@ -39,7 +39,7 @@ Mapped reads from tumor and normal tissue can be processed with mutation caller 
 
 Assume that you have loaded the data snp.dat like this:
 
-```{rr}
+```{r eval=FALSE}
 head(snp.dat)
 
   CHROM    POS  ID REF ALT QUAL FILTER LT.rna.dp LN.rna.dp ON.rna.dp OT.rna.dp BT.wes.dp LT.wes.dp LN.wes.dp ON.wes.dp
