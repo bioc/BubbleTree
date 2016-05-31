@@ -85,9 +85,10 @@ Then convert to the GRanges object:
 
 ```{rr}
 library(GenomicRanges)
-min.num <- 10
-cnv.gr <- with(subset(seg$output, num.mark >= min.num & ! chrom %in% c("chrX", "chrY")) , 
-               GRanges(chrom, IRanges(loc.start, loc.end), mcols=cbind(num.mark, seg.mean)))
+wgs.hetero.grs <- list()
+wgs.hetero.grs$lung <- with(wgs.snp.ss, GRanges(CHROM, IRanges(POS, POS), mcols=cbind(LT.wgs.dp, LT.wgs.freq)))
+wgs.hetero.grs$ovary <- with(wgs.snp.ss, GRanges(CHROM, IRanges(POS, POS), mcols=cbind(OT.wgs.dp, OT.wgs.freq)))
+names(elementMetadata(wgs.hetero.grs$lung)) <- names(elementMetadata(wgs.hetero.grs$ovary))  <- c("dp", "freq")
 ```
 
 The B-allele frequency data is extracted using the Bioconductor package `r Biocpkg("VariantAnnotation")` and converted from string to numeric format.
