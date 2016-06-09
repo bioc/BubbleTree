@@ -157,7 +157,6 @@ btree <- drawBTree(btreeplotter, pred@rbd.adj)
 print(btree)
 
 # create a combined plot with rbd and rbd.adj that shows the arrows indicating change
-# THIS IS VERY MESSY WITH CURRENT DATA from Dong
 btreeplotter <- new("BTreePlotter", max.ploidy=5, max.size=10)
 arrows <- trackBTree(btreeplotter,
                      pred@rbd,
