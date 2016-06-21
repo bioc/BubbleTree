@@ -124,7 +124,7 @@ setGeneric(name="btpredict",
 #' @example examples/btpredict-Ex.R
 setMethod("btpredict",
           "BTreePredictor",
-          function(.Object){
+          function(.Object) {
               .Object <- getPloidyAdj(.Object)
               
               # find the prevalences of the (sub)clones
@@ -188,7 +188,7 @@ setMethod("btpredict",
               predFit@config$max.distL <- 999
               predFit@config$max.distR <- 999
               predFit@config$xypGrid <- rbind(predFit@config$xypGrid, c(1,1,1))
-
+              
               .Object@result$dist <- adply(.Object@rbd.adj, 
                                            1, 
                                            function(df) 
@@ -201,11 +201,13 @@ setMethod("btpredict",
                                              abs(y-1) == min(abs(x-1) + 
                                                                  abs(y-1))) %>% 
                                   filter(dist == min(dist, na.rm=TRUE)) )
+
               .Object@result$prev <- pp
 
               deviation <- with(subset(.Object@result$dist, seg.size > 0.5),
                                 sum(seg.size * dist/100, na.rm=TRUE))
               .Object@result$deviation <- deviation
+
               return(.Object)
           }
 )
@@ -265,7 +267,7 @@ setMethod("getPloidyAdj",
               ploidy <- 2
               adj <- 2^all.seg.mean
               uc.hds <- 0
-              if(nrow(uc.segs) >0){
+              if(nrow(uc.segs) >0) {
                   uc.hds <- limma::weighted.median(uc.segs$hds,
                                                    uc.segs$seg.size,
                                                    na.rm=TRUE)
