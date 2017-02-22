@@ -342,13 +342,11 @@ setMethod("findClones",
                                     !(hds < cfg$root.hdsInt & abs(lrr) < 
                                           cfg$root.rInt))
 
-              # with the distance
-              rbd.dist <- plyr::adply(rbd.flt,
-                                      1,
-                                      function(df) findBestXYP(.Object, 
-                                                               df[1, "lrr"], 
-                                                               df[1, "hds"]))
-
+              rbd.dist <- plyr::adply(rbd.flt, 1, function(df) {
+	          out <- as.data.frame(findBestXYP(.Object, df[1, "lrr"], df[1, "hds"]))
+		  return(out)
+	      })
+	      
               if(nrow(rbd.dist) == 0) {
                   # no prediction
                   .Object@result$prev <- NA
@@ -356,7 +354,6 @@ setMethod("findClones",
               }
 
               # now predict the purity and
-              #
               rbd.dist.flt <- subset(rbd.dist, x!=1 & x!=y & p > cfg$min.prev )
               is.ambi <- FALSE
 
