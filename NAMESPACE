@@ -22,15 +22,14 @@ import("Biobase")
 importFrom("grid", unit.pmax)
 importFrom("gridExtra", arrangeGrob)
 import("gtable")
-import("rainbow")
 import("WriteXLS")
 import("IRanges")
 import("GenomicRanges")
-import("magrittr")
 import("RColorBrewer")
 import("BiocStyle")
 import("e1071")
 
+importFrom(magrittr, "%>%")
 importFrom("plyr", l_ply)
 importFrom("plyr", llply)
 importFrom("plyr", ldply)
@@ -48,6 +47,11 @@ importFrom("dplyr", summarise)
 importFrom("gtools", mixedorder)
 importFrom("limma", weighted.median)
 
+importFrom("grDevices", "hcl")
+importFrom("methods", "new")
+importFrom("stats", "cutree", "dist", "hclust", "weighted.mean")
+importFrom("utils", "tail")
+  
 # NAMESPACE conflict with ggplot2 2.0 "Position" function
 # Must import all BiocGenerics functions manually to suppress warning
 importFrom("BiocGenerics",

@@ -3,7 +3,7 @@ Type: Package
 Title: BubbleTree: an intuitive visualization to elucidate tumoral
     aneuploidy and clonality in somatic mosaicism using next
     generation sequencing data
-Version: 2.5.2
+Version: 2.5.3
 Date: 2017-02-23
 Authors@R: c(
     person("Todd", "Creasy", 
@@ -42,17 +42,19 @@ Imports:
     gtable,
     gridExtra,
     biovizBase,
-    rainbow,
-    e1071
+    e1071,
+    methods,
+    grDevices,
+    stats,
+    utils
 Depends:
-    R (>= 3.2.1),
+    R (>= 3.3),
     IRanges,
     GenomicRanges,
     plyr,
     dplyr,
     magrittr
 Suggests:
-    methods,
     knitr,
     rmarkdown
 biocViews: CopyNumberVariation, Software, Sequencing, Coverage

@@ -21,7 +21,13 @@ BTreePlotter <- setClass(
                    max.size="numeric"),
 
     prototype = list(max.ploidy=6,
-                     seq.col=rainbow(25),
+                     seq.col=c("#FF0000FF", "#FF3D00FF", "#FF7A00FF", "#FFB800FF", 
+                               "#FFF500FF", "#CCFF00FF", "#8FFF00FF", "#52FF00FF",
+                               "#14FF00FF", "#00FF29FF", "#00FF66FF", "#00FFA3FF",
+                               "#00FFE0FF", "#00E0FFFF", "#00A3FFFF", "#0066FFFF",
+                               "#0029FFFF", "#1400FFFF", "#5200FFFF", "#8F00FFFF",
+                               "#CC00FFFF", "#FF00F5FF", "#FF00B8FF", "#FF007AFF",
+                               "#FF003DFF"),
                      branch.col="",
                      branches=NULL,
                      max.size=20)
@@ -32,13 +38,21 @@ setMethod("initialize",
           function(.Object, max.ploidy=6, seq.col=NULL,
                    branch.col=NULL, branches=NULL, max.size=20) {
 
+              seq.colors <- c("#FF0000FF", "#FF3D00FF", "#FF7A00FF", "#FFB800FF", 
+                              "#FFF500FF", "#CCFF00FF", "#8FFF00FF", "#52FF00FF",
+                              "#14FF00FF", "#00FF29FF", "#00FF66FF", "#00FFA3FF",
+                              "#00FFE0FF", "#00E0FFFF", "#00A3FFFF", "#0066FFFF",
+                              "#0029FFFF", "#1400FFFF", "#5200FFFF", "#8F00FFFF",
+                              "#CC00FFFF", "#FF00F5FF", "#FF00B8FF", "#FF007AFF",
+                              "#FF003DFF")
+              
               gg_color_hue <- function(n) {
                   hues = seq(15, 375, length=n+1)
                   hcl(h=hues, l=65, c=100)[1:n]
               }
 
               if(is.null(seq.col)) {
-                  seq.col <- rainbow(25)
+                  seq.col <- seq.colors
                   names(seq.col) <- paste0("chr", 1:22)
               }
 
