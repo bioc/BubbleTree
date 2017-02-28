@@ -165,7 +165,7 @@ setMethod("btpredict",
               ###############################
               pp <- sort(.Object@result$prev, decreasing=TRUE)
               
-              if(.Object@result$ploidy.adj["ploidy"] == 3 &
+              if(!is.na(pp[1]) & .Object@result$ploidy.adj["ploidy"] == 3 &
                  pp[1] < .Object@result$ploidy.adj["purity"] -
                  .Object@config$cutree.h) {
                   pp <- c(.Object@result$ploidy.adj["purity"], pp)
@@ -188,6 +188,7 @@ setMethod("btpredict",
               predFit@config$max.distL <- 999
               predFit@config$max.distR <- 999
               predFit@config$xypGrid <- rbind(predFit@config$xypGrid, c(1,1,1))
+              colnames(predFit@config$xypGrid) <- c('x','y','p')
               
               .Object@result$dist <- adply(.Object@rbd.adj, 
                                            1, 
