@@ -4,6 +4,7 @@
 \name{drawBubbles}
 \alias{drawBubbles}
 \alias{drawBubbles,BTreePlotter-method}
+\alias{drawBubbles}
 \title{drawBubbles}
 \usage{
 drawBubbles(.Object, rbd, col = NULL)
@@ -36,4 +37,3 @@ arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01,
 btree <- drawBTree(btreeplotter, rbd1) + 
     drawBubbles(btreeplotter, rbd2, "gray80") + arrows
 }
-

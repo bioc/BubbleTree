@@ -4,6 +4,7 @@
 \name{loadRBD}
 \alias{loadRBD}
 \alias{loadRBD,BTreePredictor-method}
+\alias{loadRBD}
 \title{loadRBD}
 \usage{
 loadRBD(.Object, rbd, total.mark = NA)
@@ -49,4 +50,3 @@ btreepredictor@config$high.ploidy <- high.ploidy[nn]
 btreepredictor@config$high.purity <- high.purity[nn]
 btreepredictor <- loadRBD(btreepredictor, rbd)
 }
-

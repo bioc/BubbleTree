@@ -4,6 +4,7 @@
 \name{xyTrack}
 \alias{xyTrack}
 \alias{xyTrack,TrackPlotter-method}
+\alias{xyTrack}
 \title{xyTrack}
 \usage{
 xyTrack(.Object, result.dat, gr2, min.prev = 0.15, ymax = 4.3)
@@ -43,4 +44,3 @@ p1 <- xyTrack(trackplotter,
               gr2=gr2,
               ymax=ymax) + ggplot2::labs(title=nn)
 }
-

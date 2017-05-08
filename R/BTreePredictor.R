@@ -90,7 +90,6 @@ setGeneric(name="loadRBD",
 setMethod("loadRBD",
           "BTreePredictor",
           function(.Object, rbd, total.mark=NA) {
-              rbd <- as.data.frame(rbd@elementMetadata)
               cfg <- .Object@config
               if(is.na(total.mark)){
                   total.mark <- sum(rbd$num.mark, na.rm=TRUE)

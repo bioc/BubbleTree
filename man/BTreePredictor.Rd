@@ -11,4 +11,3 @@ BTreePredictor
 \examples{
 btreepredictor <- new("BTreePredictor")
 }
-

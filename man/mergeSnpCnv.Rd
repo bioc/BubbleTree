@@ -4,6 +4,7 @@
 \name{mergeSnpCnv}
 \alias{mergeSnpCnv}
 \alias{mergeSnpCnv,RBD-method}
+\alias{mergeSnpCnv}
 \title{mergeSnpCnv}
 \usage{
 mergeSnpCnv(.Object, snp.gr, cnv.gr)
@@ -23,4 +24,3 @@ combined, unique list of genes
 \description{
 merge snp and cnv data
 }
-

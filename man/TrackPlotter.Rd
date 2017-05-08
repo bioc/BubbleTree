@@ -11,4 +11,3 @@ TrackPlotter
 \examples{
 trackplotter <- new("TrackPlotter")
 }
-

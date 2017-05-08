@@ -40,4 +40,3 @@ all.summary <- plyr::ldply(allCall.lst, function(.Object) {
 xls.filename <- paste("all_summary", "xlsx", sep=".")
 saveXLS(list(Summary=all.summary), xls.filename)
 }
-

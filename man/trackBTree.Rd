@@ -4,6 +4,7 @@
 \name{trackBTree}
 \alias{trackBTree}
 \alias{trackBTree,BTreePlotter-method}
+\alias{trackBTree}
 \title{trackBTree}
 \usage{
 trackBTree(.Object, rbd1, rbd2, is.matched = FALSE, min.srcSize = 0.5,
@@ -46,4 +47,3 @@ arrows <- trackBTree(btreeplotter, rbd1, rbd2, min.srcSize=0.01,
 btree <- drawBTree(btreeplotter, rbd1) + 
     drawBubbles(btreeplotter, rbd2, "gray80") + arrows
 }
-

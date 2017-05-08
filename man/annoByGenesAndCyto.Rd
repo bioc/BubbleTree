@@ -4,6 +4,7 @@
 \name{annoByGenesAndCyto}
 \alias{annoByGenesAndCyto}
 \alias{annoByGenesAndCyto,Annotate-method}
+\alias{annoByGenesAndCyto}
 \title{annoByGenesAndCyto}
 \usage{
 annoByGenesAndCyto(.Object, chr, beg, end, critical.genes, gene.uni.clean.gr,
@@ -60,4 +61,3 @@ ann <- annoByGenesAndCyto(annotator,
                    gene.uni.clean.gr=gene.uni.clean.gr,
                    cyto.gr=cyto.gr)
 }
-

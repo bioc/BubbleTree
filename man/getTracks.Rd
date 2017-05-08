@@ -42,4 +42,3 @@ p2 <- bafTrack(trackplotter,
 
 t1 <- getTracks(p1, p2)
 }
-

@@ -4,6 +4,7 @@
 \name{drawFeatures}
 \alias{drawFeatures}
 \alias{drawFeatures,BTreePlotter-method}
+\alias{drawFeatures}
 \title{drawFeatures}
 \usage{
 drawFeatures(.Object, rbd, col = NULL)
@@ -58,4 +59,3 @@ out$genes <- ann$ann
 v <- z + drawFeatures(btreeplotter, out)
 print(v)
 }
-

@@ -4,6 +4,7 @@
 \name{bafTrack}
 \alias{bafTrack}
 \alias{bafTrack,TrackPlotter-method}
+\alias{bafTrack}
 \title{bafTrack}
 \usage{
 bafTrack(.Object, result.dat, gr2, somatic.gr = NULL, min.prev = 0.15,
@@ -47,4 +48,3 @@ p2 <- bafTrack(trackplotter,
                somatic.gr=all.somatic.lst[[nn]])
 
 }
-

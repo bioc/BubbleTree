@@ -4,6 +4,7 @@
 \name{heteroLociTrack}
 \alias{heteroLociTrack}
 \alias{heteroLociTrack,TrackPlotter-method}
+\alias{heteroLociTrack}
 \title{heteroLociTrack}
 \usage{
 heteroLociTrack(.Object, result.dat, gr2, hetero.gr = NULL, min.prev = 0.15,
@@ -47,4 +48,3 @@ nn <- "sam2"
 z1 <- heteroLociTrack(trackplotter, allCall.lst[[nn]]@result, 
                       gr2, allHetero.lst[[nn]])
 }
-

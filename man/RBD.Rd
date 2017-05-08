@@ -11,4 +11,3 @@ RBD
 \examples{
 rbd <- new("RBD")
 }
-

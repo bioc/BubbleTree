@@ -4,6 +4,7 @@
 \name{btpredict}
 \alias{btpredict}
 \alias{btpredict,BTreePredictor-method}
+\alias{btpredict}
 \title{btpredict}
 \usage{
 btpredict(.Object)
@@ -46,4 +47,3 @@ btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size,
 btreepredictor <- btpredict(btreepredictor)
 cat(info(btreepredictor), "\\n")
 }
-

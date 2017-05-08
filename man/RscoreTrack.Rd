@@ -4,6 +4,7 @@
 \name{RscoreTrack}
 \alias{RscoreTrack}
 \alias{RscoreTrack,TrackPlotter-method}
+\alias{RscoreTrack}
 \title{RscoreTrack}
 \usage{
 RscoreTrack(.Object, result.dat, gr2, cnv.gr = NULL, min.prev = 0.15,
@@ -46,4 +47,3 @@ nn <- "sam2"
 z <- RscoreTrack(trackplotter, allCall.lst[[nn]]@result, gr2, allCNV.lst[[nn]])
 
 }
-

@@ -12,9 +12,11 @@ setClass("GenomicRanges")
 RBD <- setClass(
     "RBD",
 
-    representation(unimodal.kurtosis="numeric"),
+    representation(unimodal.kurtosis="numeric",
+                   rbd="data.frame"),
     
-    prototype(unimodal.kurtosis=-0.1)
+    prototype(unimodal.kurtosis=-0.1,
+              rbd=NULL)
 
 )
 
@@ -22,6 +24,7 @@ setMethod("initialize",
           "RBD",
           function(.Object, unimodal.kurtosis=-0.1, ...) {
               .Object@unimodal.kurtosis <- unimodal.kurtosis
+              .Object@rbd <- data.frame()
               .Object
           }
 )
@@ -30,7 +33,7 @@ setMethod("initialize",
 #' @docType methods
 #' @rdname makeRBD
 setGeneric(name="makeRBD",
-           def=function(.Object, unimodal.kurtosis=-0.1, ...) {
+           def=function(.Object, ...) {
                standardGeneric("makeRBD")
            }
 )
@@ -52,8 +55,6 @@ setMethod("makeRBD",
 
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
               
-              
-              
               cs1 <- cs %>% 
                   filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
                   group_by(seg.id,
@@ -63,7 +64,7 @@ setMethod("makeRBD",
                            num.mark,
                            seg.mean) %>%
                   dplyr::summarise(kurtosis = e1071::kurtosis(freq, type=1),
-                                   hds = ifelse(kurtosis >= unimodal.kurtosis | is.na(kurtosis),
+                                   hds = ifelse(kurtosis >= .Object@unimodal.kurtosis | is.na(kurtosis),
                                                 abs(median(freq, 
                                                            na.rm=TRUE)-0.5),
                                                 median(abs(freq-0.5), 
@@ -74,27 +75,6 @@ setMethod("makeRBD",
                                  cnv.end="end",
                                  seg.mean="lrr")) %>% as.data.frame
               
-              
-              cs1.old <- cs %>% 
-                  filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
-                  group_by(seg.id,
-                           seqnames,
-                           cnv.start,
-                           cnv.end,
-                           num.mark,
-                           seg.mean) %>% 
-                  dplyr::summarise(kurtosis=e1071::kurtosis(freq, type=1),
-                                   hds = ifelse(kurtosis >= unimodal.kurtosis,
-                                                abs(median(freq, 
-                                                           na.rm=TRUE)-0.5),
-                                                median(abs(freq-0.5), 
-                                                       na.rm=TRUE)),
-                                   hds.sd= sd(abs(freq-0.5), na.rm=TRUE),
-                                   het.cnt = length(freq) ) %>% 
-                  plyr::rename(c(cnv.start="start",
-                                 cnv.end="end",
-                                 seg.mean="lrr")) %>% as.data.frame
-             
               # add those segment with low lrr < -1.25
               ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], 
                              cs1$seg.id)
@@ -120,7 +100,7 @@ setMethod("makeRBD",
               # calculate seg.size
               total.mark <- sum(rbd$num.mark, na.rm=TRUE)
               rbd$seg.size <- rbd$num.mark / total.mark * 100
-
+    
               return(as.data.frame(rbd))
           }
 )

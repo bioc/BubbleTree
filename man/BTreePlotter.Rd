@@ -11,4 +11,3 @@ BTreePlotter
 \examples{
 btreeplotter <- new("BTreePlotter")
 }
-

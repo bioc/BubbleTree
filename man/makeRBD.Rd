@@ -4,22 +4,23 @@
 \name{makeRBD}
 \alias{makeRBD}
 \alias{makeRBD,RBD-method}
+\alias{makeRBD}
 \title{makeRBD}
 \usage{
-makeRBD(.Object, unimodal.kurtosis = -0.1, ...)
+makeRBD(.Object, ...)
 
 \S4method{makeRBD}{RBD}(.Object, snp.gr, cnv.gr, unimodal.kurtosis = -0.1)
 }
 \arguments{
 \item{.Object}{the object}
 
-\item{unimodal.kurtosis}{kurtosis}
-
 \item{...}{other input (not needed)}
 
 \item{snp.gr}{SNP GenomicRanges object}
 
 \item{cnv.gr}{CNV GenomicRanges object}
+
+\item{unimodal.kurtosis}{kurtosis}
 }
 \value{
 RBD object
@@ -111,4 +112,3 @@ print(btree)
 info <- info(pred)
 cat("\\nPurity/Ploidy: ", info, "\\n")
 }
-

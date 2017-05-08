@@ -4,6 +4,7 @@
 \name{info}
 \alias{info}
 \alias{info,BTreePredictor-method}
+\alias{info}
 \title{info}
 \usage{
 info(.Object)
@@ -50,4 +51,3 @@ btreepredictor@config$min.segSize <- ifelse(max(btreepredictor@rbd$seg.size,
 btreepredictor <- btpredict(btreepredictor)
 cat(info(btreepredictor), "\\n")
 }
-

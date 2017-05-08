@@ -11,4 +11,3 @@ Annotate
 \examples{
 annotate <- new("Annotate")
 }
-

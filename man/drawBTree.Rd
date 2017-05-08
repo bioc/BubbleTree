@@ -4,6 +4,7 @@
 \name{drawBTree}
 \alias{drawBTree}
 \alias{drawBTree,BTreePlotter-method}
+\alias{drawBTree}
 \title{drawBTree}
 \usage{
 drawBTree(.Object, rbd, size = 1)
@@ -40,4 +41,3 @@ cc <- allCall.lst[["sam2"]]
 z <- drawBTree(btreeplotter, cc@rbd.adj) + 
     ggplot2::labs(title=sprintf("\%s (\%s)", "sam2", info(cc)))
 }
-
