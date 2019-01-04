@@ -54,15 +54,15 @@ setMethod("makeRBD",
           function(.Object, snp.gr, cnv.gr, unimodal.kurtosis=-0.1) {
 
               cs <- mergeSnpCnv(.Object, snp.gr, cnv.gr)
-              
+
               cs1 <- cs %>% 
-                  filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
                   group_by(seg.id,
                            seqnames,
                            cnv.start,
                            cnv.end,
                            num.mark,
                            seg.mean) %>%
+                  filter(!is.na(num.mark) & !is.na(seg.id) & !is.na(freq)) %>% 
                   dplyr::summarise(kurtosis = e1071::kurtosis(freq, type=1),
                                    hds = ifelse(kurtosis >= .Object@unimodal.kurtosis | is.na(kurtosis),
                                                 abs(median(freq, 
@@ -73,8 +73,9 @@ setMethod("makeRBD",
                                    het.cnt = length(freq)) %>%
                   plyr::rename(c(cnv.start="start",
                                  cnv.end="end",
-                                 seg.mean="lrr")) %>% as.data.frame
-              
+                                 seg.mean="lrr")) %>% 
+		  as.data.frame
+
               # add those segment with low lrr < -1.25
               ids <- setdiff((1:length(cnv.gr))[cnv.gr$seg.mean < -1.25], 
                              cs1$seg.id)
@@ -93,6 +94,7 @@ setMethod("makeRBD",
               }
               
               rbd <- with(cs1, GRanges(seqnames, IRanges(start, end)))
+
               elementMetadata(rbd) <- cs1[, ! names(cs1) %in% c("seqnames",
                                                                 "start",
                                                                 "end")]
